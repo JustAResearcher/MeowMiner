@@ -126,7 +126,9 @@ forward-compat JIT (covers Blackwell).
 
 ## Advanced usage
 
-Override the launchers:
+### Flag reference
+
+Pool mining (most users):
 
 ```
 MeowMiner -a yescryptR32 \
@@ -144,6 +146,24 @@ MeowMiner -a yescryptR32 \
           --coinbase-addr=<payout-address> \
           --no-stratum --segwit --no-longpoll --timeout=30
 ```
+
+| Flag | Required? | What it does |
+|---|---|---|
+| `-a <algo>` | **yes** | Algorithm. Use `yescryptR32` for Lucky Pepe. |
+| `-o <url>` | **yes** | Pool URL (stratum) or node RPC URL (solo GBT). |
+| `-u <user>` | **yes** | Pool mode: `<wallet>.<worker>`. Solo mode: node RPC user. |
+| `-p <pass>` | **yes** | Pool mode: always `x`. Solo mode: node RPC password. |
+| `-b <host:port>` | HiveOS only | Opens the built-in stats API. `h-stats.sh` reads it to report hashrate and accept/reject to the HiveOS dashboard. Default `127.0.0.1:4068`. |
+| `--no-color` | optional | Strips ANSI escape codes from output. Useful when piping to a log file or running under a log collector (HiveOS). Drop it if you're watching the console — `[Share ACCEPTED]` is nicer in green. |
+| `--coinbase-addr=<addr>` | solo only | Where the miner pays itself when it finds a block. Ignored in pool mode. **Case-sensitive** — one wrong letter and the miner exits with `invalid address`. |
+| `--no-stratum` | solo only | Forces GBT (getblocktemplate) over JSON-RPC instead of stratum. Required when mining directly against a `bitcoind`-style node. |
+| `--segwit` | solo only | Enables segwit rules in the GBT request. Required on chains where segwit is active (Lucky Pepe is). |
+| `--no-longpoll` | solo only | Disables HTTP long-polling for new block notifications. Most local nodes behave better without it; the miner just polls `getblocktemplate` every ~15s. |
+| `--timeout=30` | solo only | Network timeout in seconds for the RPC call. 30s is comfortable; default 270s is too long. |
+| `--retries=-1` | optional | Retry pool/node connection forever on failure. Without this, the miner gives up after 10 attempts — which means a brief WiFi drop takes your rig offline until you SSH in and restart. Recommended for unattended rigs. |
+| `-R 30` | optional | Wait 30 seconds between reconnect attempts. Pairs with `--retries=-1` to avoid hammering the pool on outages. |
+| `-d <n>` | optional | Pick a specific GPU index (0, 1, …). Omit to mine on all GPUs. |
+| `-i <n>` | optional | Intensity. The miner picks this for you based on VRAM — override only if you know what you're doing. |
 
 The coinbase builder automatically includes Lucky Pepe's mandatory
 dev-fund output, so solo blocks get accepted on the first submission —
