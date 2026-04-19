@@ -14,9 +14,9 @@ cross-platform junk dragging along.
 
 | OS                | Download                                                                                       |
 |-------------------|------------------------------------------------------------------------------------------------|
-| Windows 10/11 x64 | [**MeowMiner-1.0-windows-x64.zip**](../../releases/latest/download/MeowMiner-1.0-windows-x64.zip) |
-| Linux x86_64      | [**MeowMiner-1.0-linux-x86_64.tar.gz**](../../releases/latest/download/MeowMiner-1.0-linux-x86_64.tar.gz) |
-| HiveOS (custom miner) | [**MeowMiner-1.0-hiveos.tar.gz**](../../releases/latest/download/MeowMiner-1.0-hiveos.tar.gz) |
+| Windows 10/11 x64 | [**MeowMiner-1.0.1-windows-x64.zip**](../../releases/latest/download/MeowMiner-1.0.1-windows-x64.zip) |
+| Linux x86_64      | [**MeowMiner-1.0.1-linux-x86_64.tar.gz**](../../releases/latest/download/MeowMiner-1.0.1-linux-x86_64.tar.gz) |
+| HiveOS (custom miner) | [**MeowMiner-1.0.1-hiveos.tar.gz**](../../releases/latest/download/MeowMiner-1.0.1-hiveos.tar.gz) |
 
 All three bundle the same v1.0 miner. Just different launchers and
 installer bits.
@@ -25,12 +25,13 @@ installer bits.
 
 ## Windows
 
-1. Download **MeowMiner-1.0-windows-x64.zip**.
+1. Download **MeowMiner-1.0.1-windows-x64.zip**.
 2. Right-click → *Extract All…*
 3. Double-click **`run.bat`**.
 
-Pool and wallet are pre-filled. Worker name auto-sets from
-`%COMPUTERNAME%`. Done.
+Pool and wallet are pre-filled. Worker name defaults to `rig1`; if you
+run more than one rig, edit `run.bat` and change `WORKER=rig1` to
+`rig2`, `rig3`, etc.
 
 If Windows Defender/SmartScreen nags about an unrecognized app, click
 "More info" → "Run anyway" — the binary isn't signed (intentionally, no
@@ -41,7 +42,7 @@ code signing fee yet).
 ## Linux (bare-metal, non-HiveOS)
 
 ```bash
-curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0-linux-x86_64.tar.gz \
+curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0.1-linux-x86_64.tar.gz \
   | tar -xz
 chmod +x run.sh MeowMiner
 ./run.sh
@@ -58,7 +59,7 @@ Paste this URL into the **Installation URL** field of a Custom miner
 flight sheet. That's it.
 
 ```
-https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0-hiveos.tar.gz
+https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0.1-hiveos.tar.gz
 ```
 
 Full flight-sheet setup (HiveOS dashboard):
