@@ -1,0 +1,19 @@
+MeowMiner — Binary Redistribution License
+==========================================
+
+Copyright (c) 2026 JustAResearcher
+
+You may freely:
+ - Download the published binaries
+ - Run them on any machine you own or operate
+ - Share the original, unmodified release zip with others
+
+You may NOT:
+ - Distribute modified versions
+ - Reverse-engineer, disassemble, or decompile the binary
+ - Repackage, rebrand, or rehost under a different name
+ - Extract or redistribute parts of the binary
+
+The source code for MeowMiner is not published.
+
+This software is provided "as is", without warranty of any kind.
