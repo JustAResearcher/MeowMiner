@@ -54,45 +54,33 @@ driver on most distros). Pool + wallet are pre-filled in `run.sh`.
 
 ## HiveOS
 
-HiveOS uses its own custom-miner system. Here's the one-line install
-that every HiveOS rig operator should copy/paste:
+Paste this URL into the **Installation URL** field of a Custom miner
+flight sheet. That's it.
 
-```bash
-cd /hive/miners/custom && \
-  curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0-hiveos.tar.gz \
-  | tar -xz && \
-  mv $(ls -d MeowMiner* meowminer 2>/dev/null | head -1) meowminer 2>/dev/null; \
-  mkdir -p /hive/miners/custom/meowminer && \
-  curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0-hiveos.tar.gz \
-  | tar -xz -C /hive/miners/custom/meowminer && \
-  chmod +x /hive/miners/custom/meowminer/*.sh /hive/miners/custom/meowminer/MeowMiner
+```
+https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0-hiveos.tar.gz
 ```
 
-Then in the HiveOS dashboard:
+Full flight-sheet setup (HiveOS dashboard):
 
 1. **Wallets → Add Wallet**
-   - Coin: *pick any Custom Coin* (e.g. `CUSTOM`)
-   - Address: `LLhcyVdMJj7xLrTLRmhui1E4MB8AgHNB5Y` (or your own LPEPE wallet)
+   - Coin: pick any Custom coin
+   - Address: your LPEPE wallet (or `LLhcyVdMJj7xLrTLRmhui1E4MB8AgHNB5Y` to mine to JustAResearcher)
 
-2. **Flight Sheets → Add Flight Sheet**
-   - Coin: the wallet you just added
-   - Pool → **Configure in miner**
-   - Miner: **Custom**
-     - Miner name: `meowminer`
-     - Installation URL: *(blank — we already installed it above)*
-     - Hash algorithm: `yescryptR32`
-     - Wallet and worker template: `%WAL%.%WORKER_NAME%`
-     - Pool URL: `stratum+tcp://pool.luckypepe.org:3333`
-     - Pass: `x`
-     - Extra config args: *(leave blank)*
+2. **Flight Sheets → Add Flight Sheet → Setup Miner Config → Custom**
+   - Miner name: `meowminer`
+   - Installation URL: *(paste the link above)*
+   - Hash algorithm: `yescryptR32`
+   - Wallet and worker template: `%WAL%.%WORKER_NAME%`
+   - Pool URL: `stratum+tcp://pool.luckypepe.org:3333`
+   - Pass: `x`
 
-3. Apply the flight sheet to your rig. HiveOS will:
-   - Launch `h-run.sh` which starts MeowMiner
-   - Poll `h-stats.sh` for per-GPU hashrate/temp/fan → these show in the dashboard
-   - Restart the miner if it crashes
+3. Apply the flight sheet. HiveOS pulls the tarball, extracts to
+   `/hive/miners/custom/meowminer`, and runs it. Hashrate, temps, fan,
+   and accept/reject counts show up in the web dashboard via
+   `h-stats.sh`. Crashes get auto-restarted.
 
-To uninstall cleanly: `rm -rf /hive/miners/custom/meowminer`, then switch
-your flight sheet away.
+No SSH. No manual setup. Same workflow as SRBMiner or XMRig.
 
 ---
 
