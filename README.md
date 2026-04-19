@@ -1,56 +1,143 @@
 # MeowMiner
 
 A closed-source, pre-tuned YescryptR32 CUDA miner for **Lucky Pepe (LPEPE)**
-on nVidia GPUs. Drop-in replacement wherever you'd use ccminer.
+on nVidia GPUs. Drop-in replacement for ccminer.
 
-No setup. No flags to memorize. Unzip, double-click, mine.
+Live share counter. Optimized yescrypt CUDA kernel. Correct Lucky Pepe
+dev-fund coinbase. Three one-click installers, one for each OS you might
+run.
 
-## Download
+## Downloads
 
-Grab the latest release: **[MeowMiner-1.0.zip](../../releases/latest)**
+Pick the one that matches your OS — each is a standalone package, no
+cross-platform junk dragging along.
 
-Inside the zip:
+| OS                | Download                                                                                       |
+|-------------------|------------------------------------------------------------------------------------------------|
+| Windows 10/11 x64 | [**MeowMiner-1.0-windows-x64.zip**](../../releases/latest/download/MeowMiner-1.0-windows-x64.zip) |
+| Linux x86_64      | [**MeowMiner-1.0-linux-x86_64.tar.gz**](../../releases/latest/download/MeowMiner-1.0-linux-x86_64.tar.gz) |
+| HiveOS (custom miner) | [**MeowMiner-1.0-hiveos.tar.gz**](../../releases/latest/download/MeowMiner-1.0-hiveos.tar.gz) |
 
-```
-windows-x64/MeowMiner.exe     Windows 64-bit binary
-windows-x64/run.bat           one-click Windows launcher (pool + wallet pre-filled)
-linux-x86_64/MeowMiner        Linux 64-bit binary
-linux-x86_64/run.sh           one-click Linux launcher
-```
+All three bundle the same v1.0 miner. Just different launchers and
+installer bits.
 
-## Quick start
+---
 
-### Windows
-1. Download the zip, extract it.
-2. Double-click `windows-x64\run.bat`.
-3. That's it. The worker name is auto-set from your `%COMPUTERNAME%`.
+## Windows
 
-### Linux
+1. Download **MeowMiner-1.0-windows-x64.zip**.
+2. Right-click → *Extract All…*
+3. Double-click **`run.bat`**.
+
+Pool and wallet are pre-filled. Worker name auto-sets from
+`%COMPUTERNAME%`. Done.
+
+If Windows Defender/SmartScreen nags about an unrecognized app, click
+"More info" → "Run anyway" — the binary isn't signed (intentionally, no
+code signing fee yet).
+
+---
+
+## Linux (bare-metal, non-HiveOS)
+
 ```bash
-unzip MeowMiner-1.0.zip
-cd linux-x86_64
+curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0-linux-x86_64.tar.gz \
+  | tar -xz
 chmod +x run.sh MeowMiner
 ./run.sh
 ```
 
-## What's in the box
+Requires nVidia driver ≥ 525 and the CUDA 12 runtime (included with the
+driver on most distros). Pool + wallet are pre-filled in `run.sh`.
 
-- Drop-in mining against **stratum+tcp://pool.luckypepe.org:3333**
-- Single binary covers **Turing (20xx), Ampere (30xx, CMP 170HX), Ada (40xx),
-  and Blackwell (50xx via compute_90 PTX JIT)**.
-- Pre-tuned yescrypt CUDA kernel (`--maxrregcount=255 + #pragma unroll 8`) —
-  squeezes every last H/s out of 40-series cards at stock power/clock.
-- Lucky Pepe coinbase builder that correctly handles the 7% mandatory
-  dev-fund consensus rule (blocks get accepted the first time, no
-  `bad-cb-devfund-missing` rejections).
+---
 
-## Supported algorithm
+## HiveOS
 
-- `yescryptR32` — Lucky Pepe
+HiveOS uses its own custom-miner system. Here's the one-line install
+that every HiveOS rig operator should copy/paste:
+
+```bash
+cd /hive/miners/custom && \
+  curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0-hiveos.tar.gz \
+  | tar -xz && \
+  mv $(ls -d MeowMiner* meowminer 2>/dev/null | head -1) meowminer 2>/dev/null; \
+  mkdir -p /hive/miners/custom/meowminer && \
+  curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0-hiveos.tar.gz \
+  | tar -xz -C /hive/miners/custom/meowminer && \
+  chmod +x /hive/miners/custom/meowminer/*.sh /hive/miners/custom/meowminer/MeowMiner
+```
+
+Then in the HiveOS dashboard:
+
+1. **Wallets → Add Wallet**
+   - Coin: *pick any Custom Coin* (e.g. `CUSTOM`)
+   - Address: `LLhcyVdMJj7xLrTLRmhui1E4MB8AgHNB5Y` (or your own LPEPE wallet)
+
+2. **Flight Sheets → Add Flight Sheet**
+   - Coin: the wallet you just added
+   - Pool → **Configure in miner**
+   - Miner: **Custom**
+     - Miner name: `meowminer`
+     - Installation URL: *(blank — we already installed it above)*
+     - Hash algorithm: `yescryptR32`
+     - Wallet and worker template: `%WAL%.%WORKER_NAME%`
+     - Pool URL: `stratum+tcp://pool.luckypepe.org:3333`
+     - Pass: `x`
+     - Extra config args: *(leave blank)*
+
+3. Apply the flight sheet to your rig. HiveOS will:
+   - Launch `h-run.sh` which starts MeowMiner
+   - Poll `h-stats.sh` for per-GPU hashrate/temp/fan → these show in the dashboard
+   - Restart the miner if it crashes
+
+To uninstall cleanly: `rm -rf /hive/miners/custom/meowminer`, then switch
+your flight sheet away.
+
+---
+
+## What the output looks like
+
+```
+[05:29:12] 6 miner threads started, using 'yescryptr32' algorithm.
+[05:29:47] GPU #0: NVIDIA GeForce RTX 4070 Ti Super, 5.74 kH/s
+[05:30:03] [Share ACCEPTED]  1 accepted / 0 rejected  (100.00% good)  5.74 kH/s
+[05:30:41] [Share ACCEPTED]  2 accepted / 0 rejected  (100.00% good)  5.75 kH/s
+[05:31:12] [Share REJECTED]  2 accepted / 1 rejected  ( 66.67% good)  5.73 kH/s
+```
+
+Every accepted/rejected share prints a line. Running totals + good-share
+percentage are updated on every submission.
+
+---
+
+## Supported GPUs
+
+| GPU family        | Compute cap. | Example cards            |
+|-------------------|--------------|--------------------------|
+| Turing            | sm_75        | RTX 20xx                 |
+| Ampere            | sm_80/86     | RTX 30xx, CMP 170HX      |
+| Ada Lovelace      | sm_89        | RTX 40xx                 |
+| Blackwell         | sm_120       | RTX 50xx (PTX JIT)       |
+
+The binary ships with sm_80 + sm_89 baked in + compute_90 PTX for
+forward-compat JIT (covers Blackwell).
+
+---
+
+## Benchmarks (reference)
+
+| GPU                 | Hashrate    | Core / Mem / Power   |
+|---------------------|-------------|----------------------|
+| RTX 5090            | ~15 kH/s    | stock                |
+| RTX 4070 Ti Super   | ~5,750 H/s  | 2400 / 11501 / 180W  |
+| CMP 170HX           | ~2,750 H/s  | 1200 / stock / 180W  |
+
+---
 
 ## Advanced usage
 
-If you want to override the launcher:
+Override the launchers:
 
 ```
 MeowMiner -a yescryptR32 \
@@ -59,7 +146,7 @@ MeowMiner -a yescryptR32 \
           -p x
 ```
 
-Solo / GBT mining against your own node:
+Solo mining against your own LPEPE node:
 
 ```
 MeowMiner -a yescryptR32 \
@@ -69,21 +156,14 @@ MeowMiner -a yescryptR32 \
           --no-stratum --segwit --no-longpoll --timeout=30
 ```
 
-## Benchmarks (reference)
+The coinbase builder automatically includes Lucky Pepe's mandatory
+dev-fund output, so solo blocks get accepted on the first submission —
+no more `bad-cb-devfund-missing` rejections.
 
-| GPU              | Hashrate   | Core / Mem / Power |
-|------------------|------------|--------------------|
-| RTX 4070 Ti Super | ~5,750 H/s | 2400 / 11501 / 180W |
-| RTX 5090          | ~18 kH/s   | stock               |
-| CMP 170HX         | ~2,750 H/s | 1200 / stock / 180W |
-
-## System requirements
-
-- nVidia GPU (compute capability ≥ 7.5: Turing or newer)
-- Windows 10/11 (x64) — CUDA 13.x runtime bundled with driver ≥ 581
-- Linux x86_64 with CUDA 12.x runtime (matches HiveOS miners)
+---
 
 ## License
 
 Binary redistribution only. Source is not published. No reverse
-engineering, no rebranding, no rehosting.
+engineering, no rebranding, no rehosting. See `LICENSE.txt` inside each
+download.
