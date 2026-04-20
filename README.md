@@ -14,9 +14,9 @@ cross-platform junk dragging along.
 
 | OS                | Download                                                                                       |
 |-------------------|------------------------------------------------------------------------------------------------|
-| Windows 10/11 x64 | [**MeowMiner-1.0.8-windows-x64.zip**](../../releases/latest/download/MeowMiner-1.0.8-windows-x64.zip) |
-| Linux x86_64      | [**MeowMiner-1.0.8-linux-x86_64.tar.gz**](../../releases/latest/download/MeowMiner-1.0.8-linux-x86_64.tar.gz) |
-| HiveOS (custom miner) | [**MeowMiner-1.0.8-hiveos.tar.gz**](../../releases/latest/download/MeowMiner-1.0.8-hiveos.tar.gz) |
+| Windows 10/11 x64 | [**MeowMiner-1.0.9-windows-x64.zip**](../../releases/latest/download/MeowMiner-1.0.9-windows-x64.zip) |
+| Linux x86_64      | [**MeowMiner-1.0.9-linux-x86_64.tar.gz**](../../releases/latest/download/MeowMiner-1.0.9-linux-x86_64.tar.gz) |
+| HiveOS (custom miner) | [**MeowMiner-1.0.9-hiveos.tar.gz**](../../releases/latest/download/MeowMiner-1.0.9-hiveos.tar.gz) |
 
 All three bundle the same v1.0 miner. Just different launchers and
 installer bits.
@@ -25,7 +25,7 @@ installer bits.
 
 ## Windows
 
-1. Download **MeowMiner-1.0.8-windows-x64.zip**.
+1. Download **MeowMiner-1.0.9-windows-x64.zip**.
 2. Right-click → *Extract All…*
 3. Double-click **`run.bat`**.
 
@@ -42,7 +42,7 @@ code signing fee yet).
 ## Linux (bare-metal, non-HiveOS)
 
 ```bash
-curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0.8-linux-x86_64.tar.gz \
+curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0.9-linux-x86_64.tar.gz \
   | tar -xz
 chmod +x run.sh MeowMiner
 ./run.sh
@@ -59,7 +59,7 @@ Paste this URL into the **Installation URL** field of a Custom miner
 flight sheet. That's it.
 
 ```
-https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0.8-hiveos.tar.gz
+https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0.9-hiveos.tar.gz
 ```
 
 Full flight-sheet setup (HiveOS dashboard):
@@ -90,8 +90,11 @@ No SSH. No manual setup. Same workflow as SRBMiner or XMRig.
 ```
 [05:29:12] 6 miner threads started, using 'yescryptr32' algorithm.
 [05:29:47] GPU #0: NVIDIA GeForce RTX 4070 Ti Super, 5.74 kH/s
+[05:30:02] [Share FOUND]    GPU #0  nonce 0x3a8f91c2  submitting...
 [05:30:03] [Share ACCEPTED]  1 accepted / 0 rejected  (100.00% good)  5.74 kH/s
+[05:30:40] [Share FOUND]    GPU #2  nonce 0x71b4ef0a  submitting...
 [05:30:41] [Share ACCEPTED]  2 accepted / 0 rejected  (100.00% good)  5.75 kH/s  1.58 shares/min
+[05:31:11] [Share FOUND]    GPU #1  nonce 0xd2ef7004  submitting...
 [05:31:12] [Share REJECTED]  2 accepted / 1 rejected  ( 66.67% good)  5.73 kH/s  1.95 shares/min
 ```
 
