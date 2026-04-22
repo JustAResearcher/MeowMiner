@@ -14,9 +14,9 @@ cross-platform junk dragging along.
 
 | OS                | Download                                                                                       |
 |-------------------|------------------------------------------------------------------------------------------------|
-| Windows 10/11 x64 | [**MeowMiner-1.0.20-windows-x64.zip**](../../releases/latest/download/MeowMiner-1.0.20-windows-x64.zip) |
-| Linux x86_64      | [**MeowMiner-1.0.20-linux-x86_64.tar.gz**](../../releases/latest/download/MeowMiner-1.0.20-linux-x86_64.tar.gz) |
-| HiveOS (custom miner) | [**MeowMiner-1.0.20-hiveos.tar.gz**](../../releases/latest/download/MeowMiner-1.0.20-hiveos.tar.gz) |
+| Windows 10/11 x64 | [**MeowMiner-1.0.21-windows-x64.zip**](../../releases/latest/download/MeowMiner-1.0.21-windows-x64.zip) |
+| Linux x86_64      | [**MeowMiner-1.0.21-linux-x86_64.tar.gz**](../../releases/latest/download/MeowMiner-1.0.21-linux-x86_64.tar.gz) |
+| HiveOS (custom miner) | [**MeowMiner-1.0.21-hiveos.tar.gz**](../../releases/latest/download/MeowMiner-1.0.21-hiveos.tar.gz) |
 
 All three bundle the same v1.0 miner. Just different launchers and
 installer bits.
@@ -25,7 +25,7 @@ installer bits.
 
 ## Windows
 
-1. Download **MeowMiner-1.0.20-windows-x64.zip**.
+1. Download **MeowMiner-1.0.21-windows-x64.zip**.
 2. Right-click → *Extract All…*
 3. Double-click **`run.bat`**.
 
@@ -42,7 +42,7 @@ code signing fee yet).
 ## Linux (bare-metal, non-HiveOS)
 
 ```bash
-curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0.20-linux-x86_64.tar.gz \
+curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0.21-linux-x86_64.tar.gz \
   | tar -xz
 chmod +x run.sh MeowMiner
 ./run.sh
@@ -59,7 +59,7 @@ Paste this URL into the **Installation URL** field of a Custom miner
 flight sheet. That's it.
 
 ```
-https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0.20-hiveos.tar.gz
+https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.0.21-hiveos.tar.gz
 ```
 
 Full flight-sheet setup (HiveOS dashboard):
