@@ -18,8 +18,8 @@ MeowMiner --algo yec --worker rig2  # override any backend flag
 
 | OS                    | Download |
 |-----------------------|----------|
-| Windows 10/11 x64     | [**MeowMiner-1.2.0-windows-x64.zip**](../../releases/latest/download/MeowMiner-1.2.0-windows-x64.zip) |
-| Linux x86_64          | [**MeowMiner-1.2.0-linux-x86_64.tar.gz**](../../releases/latest/download/MeowMiner-1.2.0-linux-x86_64.tar.gz) |
+| Windows 10/11 x64     | [**MeowMiner-1.2.1-windows-x64.zip**](../../releases/latest/download/MeowMiner-1.2.1-windows-x64.zip) |
+| Linux x86_64          | [**MeowMiner-1.2.1-linux-x86_64.tar.gz**](../../releases/latest/download/MeowMiner-1.2.1-linux-x86_64.tar.gz) |
 | HiveOS (LPEPE only)   | [**MeowMiner-1.0.30-hiveos.tar.gz**](../../releases/download/v1.0.30/MeowMiner-1.0.30-hiveos.tar.gz) |
 
 HiveOS multi-algo packaging will land in a later release.
@@ -28,7 +28,7 @@ HiveOS multi-algo packaging will land in a later release.
 
 ## Windows
 
-1. Download **MeowMiner-1.2.0-windows-x64.zip**.
+1. Download **MeowMiner-1.2.1-windows-x64.zip**.
 2. Right-click → *Extract All…*
 3. Either:
    - Double-click **`mine-lpepe.bat`** or **`mine-yec.bat`** (defaults pre-filled), or
@@ -47,9 +47,9 @@ code signing fee yet).
 ## Linux
 
 ```bash
-curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.2.0-linux-x86_64.tar.gz \
+curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.2.1-linux-x86_64.tar.gz \
   | tar -xz
-cd MeowMiner-1.2.0-linux
+cd MeowMiner-1.2.1-linux
 ./MeowMiner --algo lpepe              # or
 ./MeowMiner --algo yec                # needs python3
 # or use the convenience scripts:
@@ -88,7 +88,7 @@ To make your own permanent wallet, just edit the line in `mine-lpepe.bat` /
 ## Archive layout
 
 ```
-MeowMiner-1.2.0/
+MeowMiner-1.2.1/
 ├── MeowMiner[.exe]            ← unified launcher (native C, no deps)
 ├── mine-lpepe.bat / .sh       ← double-click: lpepe defaults
 ├── mine-yec.bat / .sh         ← double-click: yec defaults
