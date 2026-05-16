@@ -18,8 +18,8 @@ MeowMiner --algo yec --worker rig2  # override any backend flag
 
 | OS                    | Download |
 |-----------------------|----------|
-| Windows 10/11 x64     | [**MeowMiner-1.2.1-windows-x64.zip**](../../releases/latest/download/MeowMiner-1.2.1-windows-x64.zip) |
-| Linux x86_64          | [**MeowMiner-1.2.1-linux-x86_64.tar.gz**](../../releases/latest/download/MeowMiner-1.2.1-linux-x86_64.tar.gz) |
+| Windows 10/11 x64     | [**MeowMiner-v1.3.2-windows.zip**](../../releases/latest/download/MeowMiner-v1.3.2-windows.zip) |
+| Linux x86_64          | [**MeowMiner-v1.3.2-linux.tar.gz**](../../releases/latest/download/MeowMiner-v1.3.2-linux.tar.gz) |
 | HiveOS (LPEPE only)   | [**MeowMiner-1.0.30-hiveos.tar.gz**](../../releases/download/v1.0.30/MeowMiner-1.0.30-hiveos.tar.gz) |
 
 HiveOS multi-algo packaging will land in a later release.
@@ -28,7 +28,7 @@ HiveOS multi-algo packaging will land in a later release.
 
 ## Windows
 
-1. Download **MeowMiner-1.2.1-windows-x64.zip**.
+1. Download **MeowMiner-v1.3.2-windows.zip**.
 2. Right-click → *Extract All…*
 3. Either:
    - Double-click **`mine-lpepe.bat`** or **`mine-yec.bat`** (defaults pre-filled), or
@@ -47,9 +47,9 @@ code signing fee yet).
 ## Linux
 
 ```bash
-curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-1.2.1-linux-x86_64.tar.gz \
+curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-v1.3.2-linux.tar.gz \
   | tar -xz
-cd MeowMiner-1.2.1-linux
+cd MeowMiner-v1.3.2-linux
 ./MeowMiner --algo lpepe              # or
 ./MeowMiner --algo yec                # needs python3
 # or use the convenience scripts:
@@ -88,15 +88,19 @@ To make your own permanent wallet, just edit the line in `mine-lpepe.bat` /
 ## Archive layout
 
 ```
-MeowMiner-1.2.1/
-├── MeowMiner[.exe]            ← unified launcher (native C, no deps)
-├── mine-lpepe.bat / .sh       ← double-click: lpepe defaults
-├── mine-yec.bat / .sh         ← double-click: yec defaults
-├── README.md
-└── backends/
-    ├── MeowMiner-lpepe[.exe]
-    ├── MeowMiner-yec[.exe]
-    └── mine_farm_multigpu.py  ← stratum orchestrator for YEC
+MeowMiner-v1.3.2-{linux,windows}/
+├── MeowMiner[.exe]            ← multi-algo launcher (MeowPoW / Yescrypt / KawPoW)
+├── start-meowpow.{sh,bat}
+├── start-yescrypt.{sh,bat}
+├── start-kawpow.{sh,bat}
+├── start-yec.{sh,bat}         ← single-GPU YEC
+├── start-yec-multi.{sh,bat}   ← multi-GPU YEC (new in v1.3.2)
+├── kerrigan_v9d_pd4           ← YEC kernel, high-VRAM (4070 Ti SUPER / 4090 / 5090 / A100-80)
+├── kerrigan_v9d_pd2           ← YEC kernel, low-VRAM (CMP 170HX / A100-10)
+├── mine.pyc                   ← YEC stratum wrapper (single-GPU)
+├── mine_farm_multigpu.pyc     ← YEC stratum wrapper (multi-GPU)
+├── libcudart.so.12 / libnvrtc.so.12 / libnvrtc-builtins.so.12.4
+└── README.{md,txt}
 ```
 
 ---
@@ -165,12 +169,14 @@ LPEPE (yescryptR32):
 | RTX 4070 Ti Super   | ~5,750 H/s  |
 | CMP 170HX           | ~2,750 H/s  |
 
-YEC (Equihash 192,7):
+YEC (Equihash 192,7) — v9d_pd4 kernel as of v1.3.2:
 
-| GPU                 | I/s    | Valid sols/sec |
-|---------------------|--------|----------------|
-| RTX 5090            | ~110   | ~233           |
-| RTX 4070 Ti Super   | ~19    | ~41            |
+| GPU                 | I/s    | Local Sol/s (I/s × 2) |
+|---------------------|--------|-----------------------|
+| RTX 5090            | ~169   | ~338                  |
+| RTX 4070 Ti Super   | ~71    | ~142                  |
+
+Pool-credited rate is lower than the local reading (typically 50-90% depending on the pool's vardiff equilibrium and PPLNS scoring window).
 
 ## License
 
