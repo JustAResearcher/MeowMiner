@@ -1,16 +1,19 @@
 # MeowMiner
 
-A closed-source, pre-tuned CUDA miner for **two coins**, behind a single
-unified launcher:
+A closed-source, pre-tuned CUDA miner for **multiple coins**, behind a
+single unified launcher:
 
 - **Lucky Pepe (LPEPE)** — yescryptR32
 - **YCash (YEC)** — Equihash 192,7
+- **Pearl** — alphapool int8 GEMM (**preview** — kernel ready, Windows
+  runtime not yet bundled; see below)
 
 One `MeowMiner` command, pick the coin with `--algo`.
 
 ```
 MeowMiner --algo lpepe              # Lucky Pepe defaults
 MeowMiner --algo yec                # YCash defaults
+MeowMiner --algo pearl              # Pearl (PREVIEW)
 MeowMiner --algo yec --worker rig2  # override any backend flag
 ```
 
@@ -18,8 +21,8 @@ MeowMiner --algo yec --worker rig2  # override any backend flag
 
 | OS                    | Download |
 |-----------------------|----------|
-| Windows 10/11 x64     | [**MeowMiner-v1.3.2-windows.zip**](../../releases/latest/download/MeowMiner-v1.3.2-windows.zip) |
-| Linux x86_64          | [**MeowMiner-v1.3.2-linux.tar.gz**](../../releases/latest/download/MeowMiner-v1.3.2-linux.tar.gz) |
+| Windows 10/11 x64     | [**MeowMiner-v1.3.4-windows.zip**](../../releases/latest/download/MeowMiner-v1.3.4-windows.zip) |
+| Linux x86_64          | [**MeowMiner-v1.3.4-linux.tar.gz**](../../releases/latest/download/MeowMiner-v1.3.4-linux.tar.gz) |
 | HiveOS (LPEPE only)   | [**MeowMiner-1.0.30-hiveos.tar.gz**](../../releases/download/v1.0.30/MeowMiner-1.0.30-hiveos.tar.gz) |
 
 HiveOS multi-algo packaging will land in a later release.
@@ -28,7 +31,7 @@ HiveOS multi-algo packaging will land in a later release.
 
 ## Windows
 
-1. Download **MeowMiner-v1.3.2-windows.zip**.
+1. Download **MeowMiner-v1.3.4-windows.zip**.
 2. Right-click → *Extract All…*
 3. Either:
    - Double-click **`mine-lpepe.bat`** or **`mine-yec.bat`** (defaults pre-filled), or
@@ -47,9 +50,9 @@ code signing fee yet).
 ## Linux
 
 ```bash
-curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-v1.3.2-linux.tar.gz \
+curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-v1.3.4-linux.tar.gz \
   | tar -xz
-cd MeowMiner-v1.3.2-linux
+cd MeowMiner-v1.3.4-linux
 ./MeowMiner --algo lpepe              # or
 ./MeowMiner --algo yec                # needs python3
 # or use the convenience scripts:
@@ -69,6 +72,33 @@ every modern distro).
 |---|---|
 | `lpepe`, `yescryptr32`, `yescrypt` | Lucky Pepe yescryptR32 |
 | `yec`, `equihash-192-7`, `equihash`, `ycash` | YCash Equihash 192,7 |
+| `pearl`, `alphapool` | Pearl int8 GEMM (PREVIEW) |
+
+## Pearl mining (PREVIEW)
+
+The v1.3.4 launcher recognizes `--algo pearl` and `start-pearl.bat` is
+included in the Windows package, but the Pearl backend (the pearl-gemm
+CUDA wheel + pearl-stratum runtime) is **not bundled** in this release.
+Clicking `start-pearl.bat` today prints a clear "preview / not bundled"
+message; native Windows packaging is a future release.
+
+GPU coverage of the Pearl kernel (already in source):
+
+| Arch | GPUs |
+|---|---|
+| `sm_89` (Ada) | RTX 40-series (4060/70/80/90 + Ti / Super), L40 |
+| `sm_120` (consumer Blackwell) | RTX 50-series (5070/80/90 + Ti) |
+
+To run Pearl mining today, use a Linux host with CUDA ≥ 12.8 and:
+
+```bash
+git clone <pearl repo>
+cd pearl/miner/pearl-gemm
+PEARL_GEMM_TARGET_ARCH=all-consumer pip install -e .
+```
+
+See `SM89_PORT_SPEC.md §9` in the Pearl repo for the full build +
+smoke-test recipe.
 
 ## Defaults baked into the launcher
 
@@ -88,13 +118,13 @@ To make your own permanent wallet, just edit the line in `mine-lpepe.bat` /
 ## Archive layout
 
 ```
-MeowMiner-v1.3.2-{linux,windows}/
+MeowMiner-v1.3.4-{linux,windows}/
 ├── MeowMiner[.exe]            ← multi-algo launcher (MeowPoW / Yescrypt / KawPoW)
 ├── start-meowpow.{sh,bat}
 ├── start-yescrypt.{sh,bat}
 ├── start-kawpow.{sh,bat}
 ├── start-yec.{sh,bat}         ← single-GPU YEC
-├── start-yec-multi.{sh,bat}   ← multi-GPU YEC (new in v1.3.2)
+├── start-yec-multi.{sh,bat}   ← multi-GPU YEC (new in v1.3.4)
 ├── kerrigan_v9d_pd4           ← YEC kernel, high-VRAM (4070 Ti SUPER / 4090 / 5090 / A100-80)
 ├── kerrigan_v9d_pd2           ← YEC kernel, low-VRAM (CMP 170HX / A100-10)
 ├── mine.pyc                   ← YEC stratum wrapper (single-GPU)
@@ -156,6 +186,7 @@ h-run.sh wrapper. Track in a future release.
 |-----------|---------------|
 | LPEPE (yescryptR32) | sm_60+ (Pascal P40, Turing, Ampere, Ada, Blackwell) |
 | YEC (Equihash 192,7) | sm_75 / sm_80 / sm_86 / sm_89 / sm_120 (Turing → Blackwell) |
+| Pearl (int8 GEMM, preview) | sm_89 (RTX 40) / sm_120 (RTX 50) |
 
 Tested on: RTX 5090, RTX 4070 Ti SUPER, CMP 170HX, GTX 1080 Ti (LPEPE only).
 
@@ -169,7 +200,7 @@ LPEPE (yescryptR32):
 | RTX 4070 Ti Super   | ~5,750 H/s  |
 | CMP 170HX           | ~2,750 H/s  |
 
-YEC (Equihash 192,7) — v9d_pd4 kernel as of v1.3.2:
+YEC (Equihash 192,7) — v9d_pd4 kernel as of v1.3.4:
 
 | GPU                 | I/s    | Local Sol/s (I/s × 2) |
 |---------------------|--------|-----------------------|
