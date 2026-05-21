@@ -76,11 +76,16 @@ every modern distro).
 
 ## Pearl mining (PREVIEW)
 
-The v1.3.4 launcher recognizes `--algo pearl` and `start-pearl.bat` is
-included in the Windows package, but the Pearl backend (the pearl-gemm
-CUDA wheel + pearl-stratum runtime) is **not bundled** in this release.
-Clicking `start-pearl.bat` today prints a clear "preview / not bundled"
-message; native Windows packaging is a future release.
+The v1.3.4 launcher recognizes `--algo pearl` and `start-pearl.bat`
+runs the pearl-gemm CUDA kernel via WSL2 with NVIDIA passthrough
+(same pattern as `start-meowpow.bat`). On RTX 5090 (sm_120) we
+measure **~471 TOPS at 2048³** (about 56% of the card's dense int8
+peak), verified end-to-end via `start-pearl.bat` against the
+shipped self-test. Native Windows packaging is a future release.
+
+This release ships the GPU kernel build path + self-test only.
+End-to-end mining (pearl-stratum + alphapool handshake) is the
+next release.
 
 GPU coverage of the Pearl kernel (already in source):
 
