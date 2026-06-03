@@ -79,20 +79,21 @@ every modern distro).
 
 ## MeowPoW mining (Meowcoin)
 
-`--algo meowpow` mines **Meowcoin (MEWC)** with MeowPoW, a ProgPoW-family
-algorithm. The backend is the `meowpowminer` GPU miner (a fork of
-kawpowminer / ethminer). On Windows the launcher runs it through **WSL2**
-with NVIDIA CUDA passthrough — native GPU speed, same pattern as
-`start-pearl.bat`. On Linux it runs the binary directly.
+Mines **Meowcoin (MEWC)** with MeowPoW, a ProgPoW-family algorithm. The
+backend is `meowpowminer` (a fork of kawpowminer / ethminer).
+
+**Windows: native — no WSL.** Just edit `WALLET` in **`start-meowpow.bat`**
+and double-click it. It runs `bin\meowpowminer.exe` directly on your GPU; all
+required DLLs (CUDA NVRTC, OpenSSL, jsoncpp, MSVC runtime) ship in `bin\`. You
+only need an NVIDIA driver (555+). On Linux use `./start-meowpow.sh`.
 
 ```
-MeowMiner --algo meowpow                                   # default pool + wallet
-MeowMiner --algo meowpow -P stratum+tcp://ADDR.rig:x@pool:port   # your own pool
+start-meowpow.bat                                          # default pool + wallet
+bin\meowpowminer.exe -U -P stratum+tcp://ADDR.rig:x@pool:port   # custom pool
 ```
 
-The backend takes a single `-P` connection URL; pass your own to override
-the default. Anything else (e.g. `--cuda-grid-size`, `--cu-block-size`) is
-forwarded to `meowpowminer` unchanged.
+`meowpowminer` takes a single `-P` connection URL (plus `-U` for CUDA);
+anything else (e.g. `--cuda-grid-size`) is passed through unchanged.
 
 > **Dev fee: 1%.** For 12 seconds out of every ~1000, MeowPoW mining is
 > directed to the maintainer's address, then returns to your pool (~1%
