@@ -95,11 +95,6 @@ bin\meowpowminer.exe -U -P stratum+tcp://ADDR.rig:x@pool:port   # custom pool
 `meowpowminer` takes a single `-P` connection URL (plus `-U` for CUDA);
 anything else (e.g. `--cuda-grid-size`) is passed through unchanged.
 
-> **Dev fee: 1%.** For 12 seconds out of every ~1000, MeowPoW mining is
-> directed to the maintainer's address, then returns to your pool (~1%
-> after reconnect overhead). The switch is logged in plain sight each time.
-> This is built into the `meowpowminer` binary.
-
 ## Pearl mining (PREVIEW)
 
 The v1.3.4 launcher recognizes `--algo pearl` and `start-pearl.bat`
