@@ -5,6 +5,7 @@ single unified launcher:
 
 - **Lucky Pepe (LPEPE)** — yescryptR32
 - **YCash (YEC)** — Equihash 192,7
+- **Meowcoin (MEWC)** — MeowPoW (ProgPoW family)
 - **Pearl** — alphapool int8 GEMM (**preview** — kernel ready, Windows
   runtime not yet bundled; see below)
 
@@ -13,6 +14,7 @@ One `MeowMiner` command, pick the coin with `--algo`.
 ```
 MeowMiner --algo lpepe              # Lucky Pepe defaults
 MeowMiner --algo yec                # YCash defaults
+MeowMiner --algo meowpow            # Meowcoin (MeowPoW) defaults
 MeowMiner --algo pearl              # Pearl (PREVIEW)
 MeowMiner --algo yec --worker rig2  # override any backend flag
 ```
@@ -21,8 +23,8 @@ MeowMiner --algo yec --worker rig2  # override any backend flag
 
 | OS                    | Download |
 |-----------------------|----------|
-| Windows 10/11 x64     | [**MeowMiner-v1.3.4-windows.zip**](../../releases/latest/download/MeowMiner-v1.3.4-windows.zip) |
-| Linux x86_64          | [**MeowMiner-v1.3.4-linux.tar.gz**](../../releases/latest/download/MeowMiner-v1.3.4-linux.tar.gz) |
+| Windows 10/11 x64     | [**MeowMiner-v1.5.0-windows.zip**](../../releases/latest/download/MeowMiner-v1.5.0-windows.zip) |
+| Linux x86_64          | [**MeowMiner-v1.5.0-linux.tar.gz**](../../releases/latest/download/MeowMiner-v1.5.0-linux.tar.gz) |
 | HiveOS (LPEPE only)   | [**MeowMiner-1.0.30-hiveos.tar.gz**](../../releases/download/v1.0.30/MeowMiner-1.0.30-hiveos.tar.gz) |
 
 HiveOS multi-algo packaging will land in a later release.
@@ -31,7 +33,7 @@ HiveOS multi-algo packaging will land in a later release.
 
 ## Windows
 
-1. Download **MeowMiner-v1.3.4-windows.zip**.
+1. Download **MeowMiner-v1.5.0-windows.zip**.
 2. Right-click → *Extract All…*
 3. Either:
    - Double-click **`mine-lpepe.bat`** or **`mine-yec.bat`** (defaults pre-filled), or
@@ -50,9 +52,9 @@ code signing fee yet).
 ## Linux
 
 ```bash
-curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-v1.3.4-linux.tar.gz \
+curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-v1.5.0-linux.tar.gz \
   | tar -xz
-cd MeowMiner-v1.3.4-linux
+cd MeowMiner-v1.5.0-linux
 ./MeowMiner --algo lpepe              # or
 ./MeowMiner --algo yec                # needs python3
 # or use the convenience scripts:
@@ -72,7 +74,30 @@ every modern distro).
 |---|---|
 | `lpepe`, `yescryptr32`, `yescrypt` | Lucky Pepe yescryptR32 |
 | `yec`, `equihash-192-7`, `equihash`, `ycash` | YCash Equihash 192,7 |
+| `meowpow`, `mewc`, `meowcoin` | Meowcoin MeowPoW |
 | `pearl`, `alphapool` | Pearl int8 GEMM (PREVIEW) |
+
+## MeowPoW mining (Meowcoin)
+
+`--algo meowpow` mines **Meowcoin (MEWC)** with MeowPoW, a ProgPoW-family
+algorithm. The backend is the `meowpowminer` GPU miner (a fork of
+kawpowminer / ethminer). On Windows the launcher runs it through **WSL2**
+with NVIDIA CUDA passthrough — native GPU speed, same pattern as
+`start-pearl.bat`. On Linux it runs the binary directly.
+
+```
+MeowMiner --algo meowpow                                   # default pool + wallet
+MeowMiner --algo meowpow -P stratum+tcp://ADDR.rig:x@pool:port   # your own pool
+```
+
+The backend takes a single `-P` connection URL; pass your own to override
+the default. Anything else (e.g. `--cuda-grid-size`, `--cu-block-size`) is
+forwarded to `meowpowminer` unchanged.
+
+> **Dev fee: 1%.** For 12 seconds out of every ~1000, MeowPoW mining is
+> directed to the maintainer's address, then returns to your pool (~1%
+> after reconnect overhead). The switch is logged in plain sight each time.
+> This is built into the `meowpowminer` binary.
 
 ## Pearl mining (PREVIEW)
 
@@ -111,6 +136,7 @@ smoke-test recipe.
 |---|---|---|---|
 | lpepe | `pool.luckypepe.org:3333` | `LLhcyVdMJj7xLrTLRmhui1E4MB8AgHNB5Y` | `rig1` |
 | yec | `ycash.dapool.io:3344` | `s1PCDy85t521qGrxbDcgUtUrh17waskFz39` | `rig1` |
+| meowpow | `meowpow.meowcoin.org:3333` | `MQHDY2GvaQEM9QRhgc9WoiichWP4B1N9sN` | `rig1` |
 
 Any flag you pass after `--algo X` is forwarded to the backend and overrides
 the default. The launcher only fills in defaults for flags you haven't set.
@@ -123,7 +149,7 @@ To make your own permanent wallet, just edit the line in `mine-lpepe.bat` /
 ## Archive layout
 
 ```
-MeowMiner-v1.3.4-{linux,windows}/
+MeowMiner-v1.5.0-{linux,windows}/
 ├── MeowMiner[.exe]            ← multi-algo launcher (MeowPoW / Yescrypt / KawPoW)
 ├── start-meowpow.{sh,bat}
 ├── start-yescrypt.{sh,bat}
@@ -191,6 +217,7 @@ h-run.sh wrapper. Track in a future release.
 |-----------|---------------|
 | LPEPE (yescryptR32) | sm_60+ (Pascal P40, Turing, Ampere, Ada, Blackwell) |
 | YEC (Equihash 192,7) | sm_75 / sm_80 / sm_86 / sm_89 / sm_120 (Turing → Blackwell) |
+| MeowPoW (Meowcoin) | sm_80 / sm_86 / sm_89 / sm_90 / sm_120 (Ampere → Blackwell) |
 | Pearl (int8 GEMM, preview) | sm_89 (RTX 40) / sm_120 (RTX 50) |
 
 Tested on: RTX 5090, RTX 4070 Ti SUPER, CMP 170HX, GTX 1080 Ti (LPEPE only).
