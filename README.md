@@ -1,152 +1,161 @@
 # MeowMiner
 
-A closed-source, pre-tuned CUDA miner for **two coins**, behind a single
-unified launcher:
+Pre-tuned, closed-source CUDA miners for NVIDIA GPUs, distributed as ready-to-run
+binaries for Windows, Linux, and HiveOS.
 
-- **Lucky Pepe (LPEPE)** — yescryptR32
-- **YCash (YEC)** — Equihash 192,7
+## Supported coins
 
-One `MeowMiner` command, pick the coin with `--algo`.
+| Coin | Algorithm | Package | Latest |
+|------|-----------|---------|--------|
+| **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.13 |
+| **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
+| **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
 
-```
-MeowMiner --algo lpepe              # Lucky Pepe defaults
-MeowMiner --algo yec                # YCash defaults
-MeowMiner --algo yec --worker rig2  # override any backend flag
-```
-
-## Downloads
-
-| OS                    | Download |
-|-----------------------|----------|
-| Windows 10/11 x64     | [**MeowMiner-v1.3.2-windows.zip**](../../releases/latest/download/MeowMiner-v1.3.2-windows.zip) |
-| Linux x86_64          | [**MeowMiner-v1.3.2-linux.tar.gz**](../../releases/latest/download/MeowMiner-v1.3.2-linux.tar.gz) |
-| HiveOS (LPEPE only)   | [**MeowMiner-1.0.30-hiveos.tar.gz**](../../releases/download/v1.0.30/MeowMiner-1.0.30-hiveos.tar.gz) |
-
-HiveOS multi-algo packaging will land in a later release.
+Pearl ships as its own package (a CUDA engine plus a lightweight pool client).
+Lucky Pepe and YCash share a single unified launcher, selected with `--algo`.
 
 ---
 
-## Windows
+## Pearl (PRL)
 
-1. Download **MeowMiner-v1.3.2-windows.zip**.
-2. Right-click → *Extract All…*
-3. Either:
-   - Double-click **`mine-lpepe.bat`** or **`mine-yec.bat`** (defaults pre-filled), or
-   - Open `cmd` and run `MeowMiner.exe --algo lpepe` / `--algo yec` with your own
-     flags appended.
+A tensor-core miner for Pearl's `pearlhash` proof-of-work — an int8 matrix-multiply
+workload finalized with BLAKE3. NVIDIA-only.
 
-YEC requires **Python 3** in PATH — install from [python.org](https://www.python.org/downloads/)
-and check "Add Python to PATH" during install.
+- **Architectures:** Ampere, Ada, Hopper, Blackwell (`sm_86` / `sm_89` / `sm_90` / `sm_120`).
+- **Components:** a CUDA engine (`MeowMiner-pearl`) and a pool client (`pearl_ours`).
+  The Linux client is statically linked and runs on any modern distribution and on
+  HiveOS (engine built against glibc 2.17).
+- **Requirements:** a recent NVIDIA driver. The CUDA runtime is linked statically into
+  the engine, so there is nothing else to install.
+- **Multi-GPU:** the launcher detects every GPU and runs one instance per card.
+- **Fee:** 2%, applied as a brief time slice; the GPU never pauses.
 
-If Windows Defender/SmartScreen nags about an unrecognized app, click
-"More info" → "Run anyway" — the binaries aren't signed (intentionally, no
-code signing fee yet).
+### Downloads
 
----
+| OS | Download |
+|----|----------|
+| Windows 10/11 x64 | [MeowMiner-pearl-1.6.13-windows-x64.zip](../../releases/download/v1.6.13/MeowMiner-pearl-1.6.13-windows-x64.zip) |
+| Linux x86_64 | [MeowMiner-pearl-1.6.13-linux-x86_64.tar.gz](../../releases/download/v1.6.13/MeowMiner-pearl-1.6.13-linux-x86_64.tar.gz) |
+| HiveOS | [meowminer-pearl-1.6.13.tar.gz](../../releases/download/v1.6.13/meowminer-pearl-1.6.13.tar.gz) |
 
-## Linux
+### Windows and Linux
+
+A wallet and pool are both required; the miner will not start without them and never
+falls back to a default. Open `start.bat` (Windows) or `start.sh` (Linux), set your
+Pearl wallet (`prl1…`) and pool, then run it — the script detects every GPU and
+launches one instance per card.
+
+To run the client directly, or to target specific GPUs:
 
 ```bash
-curl -sL https://github.com/JustAResearcher/MeowMiner/releases/latest/download/MeowMiner-v1.3.2-linux.tar.gz \
-  | tar -xz
-cd MeowMiner-v1.3.2-linux
-./MeowMiner --algo lpepe              # or
-./MeowMiner --algo yec                # needs python3
-# or use the convenience scripts:
-./mine-lpepe.sh
-./mine-yec.sh
+./pearl_ours --wallet prl1youraddress... --pool us2.pearl.herominers.com:1200 --worker rig1
+./pearl_ours --dev 1 --wallet prl1youraddress... --pool us2.pearl.herominers.com:1200   # GPU 1 only
 ```
 
-Requires nVidia driver ≥ 525 and the CUDA 12 runtime (bundled with the
-driver on most distros). YEC needs `python3` (pre-installed on essentially
-every modern distro).
+| Flag | Purpose |
+|------|---------|
+| `--wallet <prl1…>` | Pearl payout address (required) |
+| `--pool <host:port>` | Stratum pool (required) |
+| `--worker <name>` | Worker / rig name |
+| `--dev <index>` | GPU index — run one instance per card to mine a subset |
+
+### HiveOS
+
+Create a Custom miner flight sheet with the following fields:
+
+| Field | Value |
+|-------|-------|
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.13/meowminer-pearl-1.6.13.tar.gz` |
+| Miner name | `meowminer-pearl` |
+| Hash algorithm | `pearlhash` |
+| Wallet and worker template | `%WAL%.%WORKER_NAME%` |
+| Pool URL | `us2.pearl.herominers.com:1200` |
+| Pass | `x` |
+
+Allow roughly 60 seconds after applying for the GPU engine to initialize.
+
+### Reference performance
+
+| GPU | pearlhash |
+|-----|-----------|
+| RTX 4070 Ti SUPER | ~175 TH/s |
+
+Pool-credited rate depends on the pool's difficulty target and PPLNS window.
+
+### Sample output
+
+```
+pearl-ours: connected us2.pearl.herominers.com:1200 worker=rig1
+pearl-ours: authorized (result=True)
+pearl-ours:   gpu0:  175.2 TH  pwr 285W  acc=12 rej=0  core 64C
+pearl-ours: 175.2 TH/s | acc=12 rej=0
+```
 
 ---
 
-## Algorithm aliases
+## Lucky Pepe (LPEPE) and YCash (YEC)
+
+A single unified launcher; select the coin with `--algo`.
+
+```
+MeowMiner --algo lpepe
+MeowMiner --algo yec
+MeowMiner --algo yec --worker rig2   # any backend flag may be overridden
+```
+
+### Downloads
+
+| OS | Download |
+|----|----------|
+| Windows 10/11 x64 | [MeowMiner-v1.3.2-windows.zip](../../releases/download/v1.3.2/MeowMiner-v1.3.2-windows.zip) |
+| Linux x86_64 | [MeowMiner-v1.3.2-linux.tar.gz](../../releases/download/v1.3.2/MeowMiner-v1.3.2-linux.tar.gz) |
+| HiveOS (LPEPE) | [MeowMiner-1.0.29-hiveos.tar.gz](../../releases/download/v1.0.29/MeowMiner-1.0.29-hiveos.tar.gz) |
+
+### Usage
+
+- **Windows:** extract the archive, then double-click `mine-lpepe.bat` or
+  `mine-yec.bat`, or run `MeowMiner.exe --algo lpepe|yec` with your own flags.
+- **Linux:** extract and run `./MeowMiner --algo lpepe|yec`, or use the
+  `mine-lpepe.sh` / `mine-yec.sh` scripts.
+- **YCash** requires Python 3 on the `PATH`.
+
+Requirements: NVIDIA driver ≥ 525 and the CUDA 12 runtime (bundled with the driver
+on most systems).
+
+### Algorithm aliases
 
 | `--algo` value | Maps to |
-|---|---|
+|----------------|---------|
 | `lpepe`, `yescryptr32`, `yescrypt` | Lucky Pepe yescryptR32 |
 | `yec`, `equihash-192-7`, `equihash`, `ycash` | YCash Equihash 192,7 |
 
-## Defaults baked into the launcher
+### Launcher defaults
 
-| Algo | Pool | Wallet | Worker |
-|---|---|---|---|
-| lpepe | `pool.luckypepe.org:3333` | `LLhcyVdMJj7xLrTLRmhui1E4MB8AgHNB5Y` | `rig1` |
-| yec | `ycash.dapool.io:3344` | `s1PCDy85t521qGrxbDcgUtUrh17waskFz39` | `rig1` |
+| Algo | Pool | Worker |
+|------|------|--------|
+| `lpepe` | `pool.luckypepe.org:3333` | `rig1` |
+| `yec` | `ycash.dapool.io:3344` | `rig1` |
 
-Any flag you pass after `--algo X` is forwarded to the backend and overrides
-the default. The launcher only fills in defaults for flags you haven't set.
+Set your own wallet by editing the `mine-lpepe.*` / `mine-yec.*` scripts. Any flag
+passed after `--algo` overrides the corresponding default.
 
-To make your own permanent wallet, just edit the line in `mine-lpepe.bat` /
-`mine-yec.bat` (Windows) or `mine-lpepe.sh` / `mine-yec.sh` (Linux).
+### HiveOS (LPEPE)
 
----
+| Field | Value |
+|-------|-------|
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.0.29/MeowMiner-1.0.29-hiveos.tar.gz` |
+| Miner name | `meowminer` |
+| Hash algorithm | `yescryptR32` |
+| Wallet and worker template | `%WAL%.%WORKER_NAME%` |
+| Pool URL | `stratum+tcp://pool.luckypepe.org:3333` |
+| Pass | `x` |
 
-## Archive layout
+### Reference performance
 
-```
-MeowMiner-v1.3.2-{linux,windows}/
-├── MeowMiner[.exe]            ← multi-algo launcher (MeowPoW / Yescrypt / KawPoW)
-├── start-meowpow.{sh,bat}
-├── start-yescrypt.{sh,bat}
-├── start-kawpow.{sh,bat}
-├── start-yec.{sh,bat}         ← single-GPU YEC
-├── start-yec-multi.{sh,bat}   ← multi-GPU YEC (new in v1.3.2)
-├── kerrigan_v9d_pd4           ← YEC kernel, high-VRAM (4070 Ti SUPER / 4090 / 5090 / A100-80)
-├── kerrigan_v9d_pd2           ← YEC kernel, low-VRAM (CMP 170HX / A100-10)
-├── mine.pyc                   ← YEC stratum wrapper (single-GPU)
-├── mine_farm_multigpu.pyc     ← YEC stratum wrapper (multi-GPU)
-├── libcudart.so.12 / libnvrtc.so.12 / libnvrtc-builtins.so.12.4
-└── README.{md,txt}
-```
-
----
-
-## HiveOS (LPEPE only, on the 1.0.30 package for now)
-
-Paste this URL into the **Installation URL** field of a Custom miner
-flight sheet:
-
-```
-https://github.com/JustAResearcher/MeowMiner/releases/download/v1.0.30/MeowMiner-1.0.30-hiveos.tar.gz
-```
-
-Flight-sheet config:
-
-- Miner name: `meowminer`
-- Hash algorithm: `yescryptR32`
-- Wallet and worker template: `%WAL%.%WORKER_NAME%`
-- Pool URL: `stratum+tcp://pool.luckypepe.org:3333`
-- Pass: `x`
-
-YEC + HiveOS will be supported once the YEC backend ships h-stats.sh and an
-h-run.sh wrapper. Track in a future release.
-
----
-
-## What the output looks like
-
-**LPEPE:**
-
-```
-[05:29:12] 6 miner threads started, using 'yescryptr32' algorithm.
-[05:29:47] GPU #0: NVIDIA GeForce RTX 4070 Ti Super, 5.74 kH/s
-[05:30:02] [Share FOUND]    GPU #0  nonce 0x3a8f91c2  submitting...
-[05:30:03] [Share ACCEPTED]  1 accepted / 0 rejected  (100.00% good)  5.74 kH/s
-```
-
-**YEC:**
-
-```
-[stratum] Connected to ycash.dapool.io:3344
-[stratum] Subscribed. extranonce1=08030554 (4 bytes), extranonce2_size=28
-[stratum] NEW JOB 1 (clean=True)
-[mine] 19.7 I/s ≈ 41.4 valid sols/sec (accepted=12 rejected=0)
-[stratum] >>> ACCEPTED (a=12 r=0)
-```
+| GPU | LPEPE (yescryptR32) | YEC (Equihash 192,7) |
+|-----|---------------------|----------------------|
+| RTX 5090 | ~15 kH/s | ~338 Sol/s |
+| RTX 4070 Ti SUPER | ~5.75 kH/s | ~142 Sol/s |
 
 ---
 
@@ -154,31 +163,14 @@ h-run.sh wrapper. Track in a future release.
 
 | Algorithm | Architectures |
 |-----------|---------------|
-| LPEPE (yescryptR32) | sm_60+ (Pascal P40, Turing, Ampere, Ada, Blackwell) |
-| YEC (Equihash 192,7) | sm_75 / sm_80 / sm_86 / sm_89 / sm_120 (Turing → Blackwell) |
+| Pearl (pearlhash) | `sm_86` / `sm_89` / `sm_90` / `sm_120` (Ampere → Blackwell) |
+| LPEPE (yescryptR32) | `sm_60`+ (Pascal → Blackwell) |
+| YEC (Equihash 192,7) | `sm_75` / `sm_80` / `sm_86` / `sm_89` / `sm_120` (Turing → Blackwell) |
 
-Tested on: RTX 5090, RTX 4070 Ti SUPER, CMP 170HX, GTX 1080 Ti (LPEPE only).
-
-## Benchmarks (reference)
-
-LPEPE (yescryptR32):
-
-| GPU                 | Hashrate    |
-|---------------------|-------------|
-| RTX 5090            | ~15 kH/s    |
-| RTX 4070 Ti Super   | ~5,750 H/s  |
-| CMP 170HX           | ~2,750 H/s  |
-
-YEC (Equihash 192,7) — v9d_pd4 kernel as of v1.3.2:
-
-| GPU                 | I/s    | Local Sol/s (I/s × 2) |
-|---------------------|--------|-----------------------|
-| RTX 5090            | ~169   | ~338                  |
-| RTX 4070 Ti Super   | ~71    | ~142                  |
-
-Pool-credited rate is lower than the local reading (typically 50-90% depending on the pool's vardiff equilibrium and PPLNS scoring window).
+The binaries are unsigned. If Windows SmartScreen warns about an unrecognized app,
+choose **More info → Run anyway**.
 
 ## License
 
-Binary redistribution only. Source is not published. No reverse
-engineering, no rebranding, no rehosting. See `LICENSE.txt`.
+Closed-source; binary redistribution only. No reverse engineering, rebranding, or
+rehosting. See `LICENSE.txt`.
