@@ -37,6 +37,7 @@ workload finalized with BLAKE3. NVIDIA-only.
 | Windows 10/11 x64 | [MeowMiner-pearl-1.6.13-windows-x64.zip](../../releases/download/v1.6.13/MeowMiner-pearl-1.6.13-windows-x64.zip) |
 | Linux x86_64 | [MeowMiner-pearl-1.6.13-linux-x86_64.tar.gz](../../releases/download/v1.6.13/MeowMiner-pearl-1.6.13-linux-x86_64.tar.gz) |
 | HiveOS | [meowminer-pearl-1.6.13.tar.gz](../../releases/download/v1.6.13/meowminer-pearl-1.6.13.tar.gz) |
+| MMPOS | [meowminer-pearl-1.6.13-mmpos.tar.gz](../../releases/download/v1.6.13/meowminer-pearl-1.6.13-mmpos.tar.gz) |
 
 ### Windows and Linux
 
@@ -73,6 +74,20 @@ Create a Custom miner flight sheet with the following fields:
 | Pass | `x` |
 
 Allow roughly 60 seconds after applying for the GPU engine to initialize.
+
+### MMPOS
+
+Register a Custom miner with the package URL, then set the pool, wallet, and
+arguments in the flight sheet:
+
+| Field | Value |
+|-------|-------|
+| Custom miner URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.13/meowminer-pearl-1.6.13-mmpos.tar.gz` |
+| Pool | `us2.pearl.herominers.com:1200` |
+| Wallet | your `prl1…` address |
+| Arguments | `--wallet %wallet_address% --pool %pool_server%:%pool_port% --worker %rig_name%` |
+
+The agent launches one instance per GPU and reports per-GPU hashrate to the dashboard.
 
 ### Reference performance
 
