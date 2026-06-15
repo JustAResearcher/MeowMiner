@@ -7,7 +7,7 @@ binaries for Windows, Linux, and HiveOS.
 
 | Coin | Algorithm | Package | Latest |
 |------|-----------|---------|--------|
-| **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.14 |
+| **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.18 |
 | **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
 | **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
 
@@ -34,10 +34,10 @@ workload finalized with BLAKE3. NVIDIA-only.
 
 | OS | Download |
 |----|----------|
-| Windows 10/11 x64 | [MeowMiner-pearl-1.6.14-windows-x64.zip](../../releases/download/v1.6.14/MeowMiner-pearl-1.6.14-windows-x64.zip) |
-| Linux x86_64 | [MeowMiner-pearl-1.6.14-linux-x86_64.tar.gz](../../releases/download/v1.6.14/MeowMiner-pearl-1.6.14-linux-x86_64.tar.gz) |
-| HiveOS | [meowminer-pearl-1.6.14.tar.gz](../../releases/download/v1.6.14/meowminer-pearl-1.6.14.tar.gz) |
-| MMPOS | [meowminer-pearl-1.6.14-mmpos.tar.gz](../../releases/download/v1.6.14/meowminer-pearl-1.6.14-mmpos.tar.gz) |
+| Windows 10/11 x64 | [MeowMiner-pearl-1.6.18-windows-x64.zip](../../releases/download/v1.6.18/MeowMiner-pearl-1.6.18-windows-x64.zip) |
+| Linux x86_64 | [MeowMiner-pearl-1.6.18-linux-x86_64.tar.gz](../../releases/download/v1.6.18/MeowMiner-pearl-1.6.18-linux-x86_64.tar.gz) |
+| HiveOS | [meowminer-pearl-1.6.18.tar.gz](../../releases/download/v1.6.18/meowminer-pearl-1.6.18.tar.gz) |
+| MMPOS | [meowminer-pearl-1.6.18-mmpos.tar.gz](../../releases/download/v1.6.18/meowminer-pearl-1.6.18-mmpos.tar.gz) |
 
 ### Windows and Linux
 
@@ -66,7 +66,7 @@ Create a Custom miner flight sheet with the following fields:
 
 | Field | Value |
 |-------|-------|
-| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.14/meowminer-pearl-1.6.14.tar.gz` |
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.18/meowminer-pearl-1.6.18.tar.gz` |
 | Miner name | `meowminer-pearl` |
 | Hash algorithm | `pearlhash` |
 | Wallet and worker template | `%WAL%.%WORKER_NAME%` |
@@ -82,7 +82,7 @@ arguments in the flight sheet:
 
 | Field | Value |
 |-------|-------|
-| Custom miner URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.14/meowminer-pearl-1.6.14-mmpos.tar.gz` |
+| Custom miner URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.18/meowminer-pearl-1.6.18-mmpos.tar.gz` |
 | Pool | `us2.pearl.herominers.com:1200` |
 | Wallet | your `prl1…` address |
 | Arguments | `--wallet %wallet_address% --pool %pool_server%:%pool_port% --worker %rig_name%` |
@@ -93,6 +93,7 @@ The agent launches one instance per GPU and reports per-GPU hashrate to the dash
 
 | GPU | pearlhash |
 |-----|-----------|
+| RTX 5090 | ~325 TH/s |
 | RTX 4070 Ti SUPER | ~175 TH/s |
 
 Pool-credited rate depends on the pool's difficulty target and PPLNS window.
