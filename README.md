@@ -37,12 +37,12 @@ workload finalized with BLAKE3. NVIDIA-only.
 | Windows 10/11 x64 | [MeowMiner-pearl-1.6.20-windows-x64.zip](../../releases/download/v1.6.20/MeowMiner-pearl-1.6.20-windows-x64.zip) |
 | Linux x86_64 | [MeowMiner-pearl-1.6.20-linux-x86_64.tar.gz](../../releases/download/v1.6.20/MeowMiner-pearl-1.6.20-linux-x86_64.tar.gz) |
 | HiveOS | [meowminer-pearl-1.6.20.tar.gz](../../releases/download/v1.6.20/meowminer-pearl-1.6.20.tar.gz) |
-| MMPOS | [meowminer-pearl-1.6.19-mmpos.tar.gz](../../releases/download/v1.6.19/meowminer-pearl-1.6.19-mmpos.tar.gz) |
+| MMPOS | [meowminer-pearl-1.6.20-mmpos.tar.gz](../../releases/download/v1.6.20/meowminer-pearl-1.6.20-mmpos.tar.gz) |
 
-v1.6.20 includes the pool-soaked Ada hashrate path for Windows, Linux, and
-HiveOS: fixed B, the 32x3 L2 super-block raster, and fused R=256 noising.
+v1.6.20 includes the pool-soaked Ada hashrate path for Windows, Linux, HiveOS,
+and MMPOS: fixed B, the 32x3 L2 super-block raster, and fused R=256 noising.
 The 30-minute HeroMiners mini10 soak averaged about 181.6 TH/s with 34 accepted
-shares. MMPOS remains on the last packaged build, v1.6.19.
+shares.
 
 ### Windows and Linux
 
@@ -87,7 +87,7 @@ arguments in the flight sheet:
 
 | Field | Value |
 |-------|-------|
-| Custom miner URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.19/meowminer-pearl-1.6.19-mmpos.tar.gz` |
+| Custom miner URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.20/meowminer-pearl-1.6.20-mmpos.tar.gz` |
 | Pool | `us2.pearl.herominers.com:1200` |
 | Wallet | your `prl1…` address |
 | Arguments | `--wallet %wallet_address% --pool %pool_server%:%pool_port% --worker %rig_name%` |
