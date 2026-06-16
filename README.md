@@ -7,7 +7,7 @@ binaries for Windows, Linux, and HiveOS.
 
 | Coin | Algorithm | Package | Latest |
 |------|-----------|---------|--------|
-| **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.19 |
+| **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.20 |
 | **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
 | **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
 
@@ -34,13 +34,15 @@ workload finalized with BLAKE3. NVIDIA-only.
 
 | OS | Download |
 |----|----------|
-| Windows 10/11 x64 | [MeowMiner-pearl-1.6.19-windows-x64.zip](../../releases/download/v1.6.19/MeowMiner-pearl-1.6.19-windows-x64.zip) |
-| Linux x86_64 | [MeowMiner-pearl-1.6.19-linux-x86_64.tar.gz](../../releases/download/v1.6.19/MeowMiner-pearl-1.6.19-linux-x86_64.tar.gz) |
-| HiveOS | [meowminer-pearl-1.6.19.tar.gz](../../releases/download/v1.6.19/meowminer-pearl-1.6.19.tar.gz) |
+| Windows 10/11 x64 | [MeowMiner-pearl-1.6.20-windows-x64.zip](../../releases/download/v1.6.20/MeowMiner-pearl-1.6.20-windows-x64.zip) |
+| Linux x86_64 | [MeowMiner-pearl-1.6.20-linux-x86_64.tar.gz](../../releases/download/v1.6.20/MeowMiner-pearl-1.6.20-linux-x86_64.tar.gz) |
+| HiveOS | [meowminer-pearl-1.6.20.tar.gz](../../releases/download/v1.6.20/meowminer-pearl-1.6.20.tar.gz) |
 | MMPOS | [meowminer-pearl-1.6.19-mmpos.tar.gz](../../releases/download/v1.6.19/meowminer-pearl-1.6.19-mmpos.tar.gz) |
 
-v1.6.19 includes the RTX 5090 stream-sync speedup for Windows, Linux, HiveOS,
-and MMPOS packages.
+v1.6.20 includes the pool-soaked Ada hashrate path for Windows, Linux, and
+HiveOS: fixed B, the 32x3 L2 super-block raster, and fused R=256 noising.
+The 30-minute HeroMiners mini10 soak averaged about 181.6 TH/s with 34 accepted
+shares. MMPOS remains on the last packaged build, v1.6.19.
 
 ### Windows and Linux
 
@@ -69,7 +71,7 @@ Create a Custom miner flight sheet with the following fields:
 
 | Field | Value |
 |-------|-------|
-| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.19/meowminer-pearl-1.6.19.tar.gz` |
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.20/meowminer-pearl-1.6.20.tar.gz` |
 | Miner name | `meowminer-pearl` |
 | Hash algorithm | `pearlhash` |
 | Wallet and worker template | `%WAL%.%WORKER_NAME%` |
@@ -97,7 +99,7 @@ The agent launches one instance per GPU and reports per-GPU hashrate to the dash
 | GPU | pearlhash |
 |-----|-----------|
 | RTX 5090 (v1.6.19) | ~325 TH/s |
-| RTX 4070 Ti SUPER | ~175 TH/s |
+| RTX 4070 Ti SUPER (v1.6.20 Ada path) | ~181.6 TH/s |
 
 Pool-credited rate depends on the pool's difficulty target and PPLNS window.
 
