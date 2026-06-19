@@ -7,7 +7,7 @@ binaries for Windows, Linux, and HiveOS.
 
 | Coin | Algorithm | Package | Latest |
 |------|-----------|---------|--------|
-| **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.21 |
+| **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.22 |
 | **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
 | **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
 
@@ -34,17 +34,18 @@ workload finalized with BLAKE3. NVIDIA-only.
 
 | OS | Download |
 |----|----------|
-| Windows 10/11 x64 | [MeowMiner-pearl-1.6.21-windows-x64.zip](../../releases/download/v1.6.21/MeowMiner-pearl-1.6.21-windows-x64.zip) |
-| Linux x86_64 | [MeowMiner-pearl-1.6.21-linux-x86_64.tar.gz](../../releases/download/v1.6.21/MeowMiner-pearl-1.6.21-linux-x86_64.tar.gz) |
-| HiveOS | [meowminer-pearl-1.6.21.tar.gz](../../releases/download/v1.6.21/meowminer-pearl-1.6.21.tar.gz) |
-| MMPOS | [meowminer-pearl-1.6.21-mmpos.tar.gz](../../releases/download/v1.6.21/meowminer-pearl-1.6.21-mmpos.tar.gz) |
+| Windows 10/11 x64 | [MeowMiner-pearl-1.6.22-windows-x64.zip](../../releases/download/v1.6.22/MeowMiner-pearl-1.6.22-windows-x64.zip) |
+| Linux x86_64 | [MeowMiner-pearl-1.6.22-linux-x86_64.tar.gz](../../releases/download/v1.6.22/MeowMiner-pearl-1.6.22-linux-x86_64.tar.gz) |
+| HiveOS | [meowminer-pearl-1.6.22.tar.gz](../../releases/download/v1.6.22/meowminer-pearl-1.6.22.tar.gz) |
+| MMPOS | [meowminer-pearl-1.6.22-mmpos.tar.gz](../../releases/download/v1.6.22/meowminer-pearl-1.6.22-mmpos.tar.gz) |
 
-v1.6.21 includes the pool-soaked Ada hashrate path for Windows, Linux, HiveOS,
+v1.6.22 includes the pool-soaked Ada hashrate path for Windows, Linux, HiveOS,
 and MMPOS: fixed B, the 32x3 L2 super-block raster, and fused R=256 noising.
 The 30-minute HeroMiners mini10 soak averaged about 181.6 TH/s with 34 accepted
 shares. It also bumps the HiveOS package version so rigs install the corrected
 RTX 50 / sm_120 stream-sync engine instead of reusing an already-installed
-v1.6.20 custom-miner directory.
+v1.6.20 custom-miner directory. New in v1.6.22, the pool client reports pool
+ping from TCP connect latency and share-submit round-trip replies.
 
 ### Windows and Linux
 
@@ -73,7 +74,7 @@ Create a Custom miner flight sheet with the following fields:
 
 | Field | Value |
 |-------|-------|
-| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.21/meowminer-pearl-1.6.21.tar.gz` |
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.22/meowminer-pearl-1.6.22.tar.gz` |
 | Miner name | `meowminer-pearl` |
 | Hash algorithm | `pearlhash` |
 | Wallet and worker template | `%WAL%.%WORKER_NAME%` |
@@ -89,7 +90,7 @@ arguments in the flight sheet:
 
 | Field | Value |
 |-------|-------|
-| Custom miner URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.21/meowminer-pearl-1.6.21-mmpos.tar.gz` |
+| Custom miner URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.22/meowminer-pearl-1.6.22-mmpos.tar.gz` |
 | Pool | `us2.pearl.herominers.com:1200` |
 | Wallet | your `prl1…` address |
 | Arguments | `--wallet %wallet_address% --pool %pool_server%:%pool_port% --worker %rig_name%` |
@@ -108,10 +109,11 @@ Pool-credited rate depends on the pool's difficulty target and PPLNS window.
 ### Sample output
 
 ```
-pearl-ours: connected us2.pearl.herominers.com:1200 worker=rig1
+pearl-ours: connected us2.pearl.herominers.com:1200 worker=rig1 ping=42ms
 pearl-ours: authorized (result=True)
-pearl-ours:   gpu0:  175.2 TH  pwr 285W  acc=12 rej=0  core 64C
-pearl-ours: 175.2 TH/s | acc=12 rej=0
+pearl-ours: share accepted (total 12) ping=48ms
+pearl-ours:   gpu0:  175.2 TH  pwr 285W  acc=12 rej=0  ping   48ms  core 64C
+pearl-ours: 175.2 TH/s | acc=12 rej=0 ping=48ms
 ```
 
 ---
