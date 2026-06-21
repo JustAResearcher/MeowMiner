@@ -7,12 +7,70 @@ binaries for Windows, Linux, and HiveOS.
 
 | Coin | Algorithm | Package | Latest |
 |------|-----------|---------|--------|
+| **Keryx (KRX)** | keryxhash | `MeowMiner-keryx` | v1.6.24 |
 | **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.23 |
 | **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
 | **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
 
+Keryx ships as its own CUDA package, wrapping Keryx miner 0.3.2 with
+MeowMiner launchers and HiveOS integration.
 Pearl ships as its own package (a CUDA engine plus a lightweight pool client).
 Lucky Pepe and YCash share a single unified launcher, selected with `--algo`.
+
+---
+
+## Keryx (KRX)
+
+A CUDA miner package for Keryx `keryxhash`, with an optimized Ada / `sm_89`
+kernel path for RTX 40-series GPUs.
+
+- **Architectures:** NVIDIA CUDA GPUs; RTX 4070 Ti SUPER uses the optimized `sm_89` cubin.
+- **Components:** `MeowMiner-keryx` and the `keryxcuda` plugin.
+- **Pool default:** LuckyPool `stratum+tcp://keryx-us.lproute.com:8460`.
+- **Model tier:** package starter scripts use `--light` to minimize OPoI model requirements.
+
+### Downloads
+
+| OS | Download |
+|----|----------|
+| Windows 10/11 x64 | [MeowMiner-keryx-1.6.24-windows-x64.zip](../../releases/download/v1.6.24/MeowMiner-keryx-1.6.24-windows-x64.zip) |
+| Linux x86_64 | [MeowMiner-keryx-1.6.24-linux-x86_64.tar.gz](../../releases/download/v1.6.24/MeowMiner-keryx-1.6.24-linux-x86_64.tar.gz) |
+| HiveOS | [meowminer-keryx-1.6.24.tar.gz](../../releases/download/v1.6.24/meowminer-keryx-1.6.24.tar.gz) |
+
+### Windows and Linux
+
+Edit `start.bat` or `start.sh`, set your Keryx wallet, then run the script.
+Worker names can be appended to the wallet, for example `keryx:ADDRESS.rig1`.
+
+Direct run example:
+
+```bash
+./MeowMiner-keryx --mining-address keryx:YOUR_ADDRESS.rig1 --keryxd-address stratum+tcp://keryx-us.lproute.com:8460 --light
+```
+
+### HiveOS
+
+Create a Custom miner flight sheet with:
+
+| Field | Value |
+|-------|-------|
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.24/meowminer-keryx-1.6.24.tar.gz` |
+| Miner name | `meowminer-keryx` |
+| Hash algorithm | `keryxhash` |
+| Wallet and worker template | `%WAL%.%WORKER_NAME%` |
+| Pool URL | `stratum+tcp://keryx-us.lproute.com:8460` |
+| Pass | `x` |
+
+Other LuckyPool regions use the same port: `keryx-eu.lproute.com:8460`,
+`keryx-pl.lproute.com:8460`, `keryx-ru.lproute.com:8460`,
+`keryx-hk.lproute.com:8460`, `keryx-sg.lproute.com:8460`, and
+`keryx-br.lproute.com:8460`.
+
+### Reference performance
+
+| GPU | keryxhash |
+|-----|-----------|
+| RTX 4070 Ti SUPER | ~1.30 GH/s |
 
 ---
 
@@ -187,6 +245,7 @@ passed after `--algo` overrides the corresponding default.
 
 | Algorithm | Architectures |
 |-----------|---------------|
+| Keryx (keryxhash) | CUDA GPUs; optimized `sm_89` path for RTX 40-series |
 | Pearl (pearlhash) | `sm_86` / `sm_89` / `sm_90` / `sm_120` (Ampere → Blackwell) |
 | LPEPE (yescryptR32) | `sm_60`+ (Pascal → Blackwell) |
 | YEC (Equihash 192,7) | `sm_75` / `sm_80` / `sm_86` / `sm_89` / `sm_120` (Turing → Blackwell) |
