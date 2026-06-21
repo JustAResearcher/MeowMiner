@@ -39,9 +39,9 @@ workload finalized with BLAKE3. NVIDIA-only.
 | HiveOS | [meowminer-pearl-1.6.23.tar.gz](../../releases/download/v1.6.23/meowminer-pearl-1.6.23.tar.gz) |
 | MMPOS | [meowminer-pearl-1.6.23-mmpos.tar.gz](../../releases/download/v1.6.23/meowminer-pearl-1.6.23-mmpos.tar.gz) |
 
-v1.6.23 keeps the v1.6.22 pool-ping wrapper and adds an experimental Linux,
-HiveOS, and MMPOS RTX 30-series / sm_86 engine split. sm_86 GPUs now route to a
-separate BK64 StreamK candidate binary, while RTX 40 / sm_89 keeps the
+v1.6.23 keeps the v1.6.22 pool-ping wrapper and adds an experimental Windows,
+Linux, HiveOS, and MMPOS RTX 30-series / sm_86 engine split. sm_86 GPUs now
+route to a separate BK64 StreamK candidate binary, while RTX 40 / sm_89 keeps the
 pool-soaked Ada fixed-B + 32x3 L2 path and RTX 50 / sm_120 keeps the tested
 v1.6.19 stream-sync legacy engine. This is a software-only kernel/scheduler
 package update; it does not change clocks, fan settings, or power limits.
