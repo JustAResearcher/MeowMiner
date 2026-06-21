@@ -7,7 +7,7 @@ binaries for Windows, Linux, and HiveOS.
 
 | Coin | Algorithm | Package | Latest |
 |------|-----------|---------|--------|
-| **Keryx (KRX)** | keryxhash | `MeowMiner-keryx` | v1.6.24 |
+| **Keryx (KRX)** | keryxhash | `MeowMiner-keryx` | v1.6.25 |
 | **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.23 |
 | **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
 | **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
@@ -21,10 +21,10 @@ Lucky Pepe and YCash share a single unified launcher, selected with `--algo`.
 
 ## Keryx (KRX)
 
-A CUDA miner package for Keryx `keryxhash`, with an optimized Ada / `sm_89`
-kernel path for RTX 40-series GPUs.
+A CUDA miner package for Keryx `keryxhash`, with optimized Ada / `sm_89`
+and Blackwell / `sm_120` kernel paths for RTX 40-series and 50-series GPUs.
 
-- **Architectures:** NVIDIA CUDA GPUs; RTX 4070 Ti SUPER uses the optimized `sm_89` cubin.
+- **Architectures:** NVIDIA CUDA GPUs; RTX 4070 Ti SUPER uses the optimized `sm_89` cubin, and RTX 5090 / 50-series uses the optimized `sm_120` cubin.
 - **Components:** `MeowMiner-keryx` and the `keryxcuda` plugin.
 - **Pool default:** LuckyPool `stratum+tcp://keryx-us.lproute.com:8460`.
 - **Model tier:** package starter scripts use `--light` to minimize OPoI model requirements.
@@ -33,9 +33,9 @@ kernel path for RTX 40-series GPUs.
 
 | OS | Download |
 |----|----------|
-| Windows 10/11 x64 | [MeowMiner-keryx-1.6.24-windows-x64.zip](../../releases/download/v1.6.24/MeowMiner-keryx-1.6.24-windows-x64.zip) |
-| Linux x86_64 | [MeowMiner-keryx-1.6.24-linux-x86_64.tar.gz](../../releases/download/v1.6.24/MeowMiner-keryx-1.6.24-linux-x86_64.tar.gz) |
-| HiveOS | [meowminer-keryx-1.6.24.tar.gz](../../releases/download/v1.6.24/meowminer-keryx-1.6.24.tar.gz) |
+| Windows 10/11 x64 | [MeowMiner-keryx-1.6.25-windows-x64.zip](../../releases/download/v1.6.25/MeowMiner-keryx-1.6.25-windows-x64.zip) |
+| Linux x86_64 | [MeowMiner-keryx-1.6.25-linux-x86_64.tar.gz](../../releases/download/v1.6.25/MeowMiner-keryx-1.6.25-linux-x86_64.tar.gz) |
+| HiveOS | [meowminer-keryx-1.6.25.tar.gz](../../releases/download/v1.6.25/meowminer-keryx-1.6.25.tar.gz) |
 
 ### Windows and Linux
 
@@ -54,7 +54,7 @@ Create a Custom miner flight sheet with:
 
 | Field | Value |
 |-------|-------|
-| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.24/meowminer-keryx-1.6.24.tar.gz` |
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.25/meowminer-keryx-1.6.25.tar.gz` |
 | Miner name | `meowminer-keryx` |
 | Hash algorithm | `keryxhash` |
 | Wallet and worker template | `%WAL%.%WORKER_NAME%` |
