@@ -8,7 +8,7 @@ binaries for Windows, Linux, and HiveOS.
 | Coin | Algorithm | Package | Latest |
 |------|-----------|---------|--------|
 | **Keryx (KRX)** | keryxhash | `MeowMiner-keryx` | v1.6.25 |
-| **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.38 |
+| **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.39 |
 | **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
 | **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
 
@@ -95,13 +95,13 @@ workload finalized with BLAKE3. NVIDIA-only.
 | Windows 10/11 x64 | [MeowMiner-pearl-1.6.23-windows-x64.zip](../../releases/download/v1.6.23/MeowMiner-pearl-1.6.23-windows-x64.zip) |
 | Linux x86_64 | [MeowMiner-pearl-1.6.23-linux-x86_64.tar.gz](../../releases/download/v1.6.23/MeowMiner-pearl-1.6.23-linux-x86_64.tar.gz) |
 | HiveOS | [meowminer-pearl-1.6.23.tar.gz](../../releases/download/v1.6.23/meowminer-pearl-1.6.23.tar.gz) |
-| HiveOS sm86 package | [meowminer-sm86-lab-candidates-1.6.38.tar.gz](../../releases/download/v1.6.38/meowminer-sm86-lab-candidates-1.6.38.tar.gz) |
+| HiveOS sm86 package | [meowminer-sm86-lab-candidates-1.6.39.tar.gz](../../releases/download/v1.6.39/meowminer-sm86-lab-candidates-1.6.39.tar.gz) |
 | MMPOS | [meowminer-pearl-1.6.23-mmpos.tar.gz](../../releases/download/v1.6.23/meowminer-pearl-1.6.23-mmpos.tar.gz) |
 
-v1.6.38 updates the HiveOS sm86 lab package to ship the measured no-sync
-drain/lastwait/no-fence hsig async engine as `MeowMiner-pearl.sm86` and defaults
-sm_86 to `PEARL_SM86_AUTO_L2BLOCK=0`, matching the fast benchmark path. The
-launcher prints the selected engine hash and sm86 scheduler flags per GPU.
+v1.6.39 fixes the HiveOS sm86 scheduler selection by forcing the 2x1/N512
+Ampere path and selecting the exact fixed-grid specialization when the GPU SM
+count is known. The launcher prints the selected engine hash and sm86 scheduler
+flags per GPU, including `l2block=2x1`, `n512=1`, and `sm86_fixed_grid`.
 
 v1.6.23 keeps the v1.6.22 pool-ping wrapper and adds an experimental Windows,
 Linux, HiveOS, and MMPOS RTX 30-series / sm_86 engine split. sm_86 GPUs now
@@ -150,7 +150,7 @@ For the RTX 30-series sm86 HiveOS package, use:
 
 | Field | Value |
 |-------|-------|
-| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.38/meowminer-sm86-lab-candidates-1.6.38.tar.gz` |
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.39/meowminer-sm86-lab-candidates-1.6.39.tar.gz` |
 | Miner name | `meowminer-sm86-lab-candidates` |
 
 ### MMPOS
