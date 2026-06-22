@@ -95,13 +95,13 @@ workload finalized with BLAKE3. NVIDIA-only.
 | Windows 10/11 x64 | [MeowMiner-pearl-1.6.23-windows-x64.zip](../../releases/download/v1.6.23/MeowMiner-pearl-1.6.23-windows-x64.zip) |
 | Linux x86_64 | [MeowMiner-pearl-1.6.23-linux-x86_64.tar.gz](../../releases/download/v1.6.23/MeowMiner-pearl-1.6.23-linux-x86_64.tar.gz) |
 | HiveOS | [meowminer-pearl-1.6.23.tar.gz](../../releases/download/v1.6.23/meowminer-pearl-1.6.23.tar.gz) |
-| HiveOS sm86 package | [meowminer-sm86-lab-candidates-1.6.34.tar.gz](../../releases/download/v1.6.34/meowminer-sm86-lab-candidates-1.6.34.tar.gz) |
+| HiveOS sm86 package | [meowminer-sm86-lab-candidates-1.6.35.tar.gz](../../releases/download/v1.6.35/meowminer-sm86-lab-candidates-1.6.35.tar.gz) |
 | MMPOS | [meowminer-pearl-1.6.23-mmpos.tar.gz](../../releases/download/v1.6.23/meowminer-pearl-1.6.23-mmpos.tar.gz) |
 
-v1.6.34 fixes the HiveOS sm86 lab package fast-path selection for RTX 30-series
-cards. It ships the rebuilt tile-end-hash direct min-store sm86 engine and
-exports the fixed-grid selector that the log reports, keeping the CUDA scheduler
-path aligned with the displayed sm86 grid guard.
+v1.6.35 switches the HiveOS sm86 lab package to the rebuilt S4 tile-end-hash
+direct min-store engine and makes `bk64_stage=4` the package default. It keeps
+the fixed-grid selector export from v1.6.34 so the CUDA scheduler path matches
+the displayed sm86 grid guard.
 
 v1.6.23 keeps the v1.6.22 pool-ping wrapper and adds an experimental Windows,
 Linux, HiveOS, and MMPOS RTX 30-series / sm_86 engine split. sm_86 GPUs now
@@ -150,7 +150,7 @@ For the RTX 30-series sm86 HiveOS package, use:
 
 | Field | Value |
 |-------|-------|
-| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.34/meowminer-sm86-lab-candidates-1.6.34.tar.gz` |
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.35/meowminer-sm86-lab-candidates-1.6.35.tar.gz` |
 | Miner name | `meowminer-sm86-lab-candidates` |
 
 ### MMPOS
