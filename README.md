@@ -9,15 +9,12 @@ binaries for Windows, Linux, and HiveOS.
 |------|-----------|---------|--------|
 | **Keryx (KRX)** | keryxhash | `MeowMiner-keryx` | v1.6.25 |
 | **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.42 |
-| **Tari C29** | Cuckaroo29 | `MeowMiner-c29` | v1.6.42 |
 | **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
 | **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
 
 Keryx ships as its own CUDA package, wrapping Keryx miner 0.3.2 with
 MeowMiner launchers and HiveOS integration.
 Pearl ships as its own package (a CUDA engine plus a lightweight pool client).
-C29 ships as a Windows x64 CUDA package with a LuckyPool-compatible Tari C29
-pool miner.
 Lucky Pepe and YCash share a single unified launcher, selected with `--algo`.
 
 ---
@@ -83,6 +80,8 @@ A tensor-core miner for Pearl's `pearlhash` proof-of-work — an int8 matrix-mul
 workload finalized with BLAKE3. NVIDIA-only.
 
 - **Architectures:** Ampere, Ada, Hopper, Blackwell (`sm_86` / `sm_89` / `sm_90` / `sm_120`).
+- **Optimized GPU paths:** RTX 30-series / `sm_86`, RTX 40-series / `sm_89`,
+  and RTX 50-series / `sm_120` are supported and route to tuned Pearl kernels.
 - **Components:** a CUDA engine (`MeowMiner-pearl`) and a pool client (`pearl_ours`).
   The Linux client is statically linked and runs on any modern distribution and on
   HiveOS (engine built against glibc 2.17).
@@ -108,12 +107,12 @@ fixed-grid path. The launcher prints the selected engine hash and sm86 scheduler
 flags per GPU; an RTX 3060 Ti default run should show `sm86_fixed_grid=38`,
 `l2block=n/axn/a`, and `bk64_stage=2`.
 
-v1.6.23 keeps the v1.6.22 pool-ping wrapper and adds an experimental Windows,
-Linux, HiveOS, and MMPOS RTX 30-series / sm_86 engine split. sm_86 GPUs now
-route to a separate BK64 StreamK candidate binary, while RTX 40 / sm_89 keeps the
-pool-soaked Ada fixed-B + 32x3 L2 path and RTX 50 / sm_120 keeps the tested
-v1.6.19 stream-sync legacy engine. This is a software-only kernel/scheduler
-package update; it does not change clocks, fan settings, or power limits.
+v1.6.23 keeps the v1.6.22 pool-ping wrapper and adds a Windows, Linux, HiveOS,
+and MMPOS engine split by GPU architecture. sm_86 GPUs route to a separate BK64
+StreamK candidate binary, RTX 40 / sm_89 uses the optimized Ada fixed-B + 32x3
+L2 path, and RTX 50 / sm_120 uses the tested Blackwell stream-sync engine. This
+is a software-only kernel/scheduler package update; it does not change clocks,
+fan settings, or power limits.
 
 ### Windows and Linux
 
@@ -190,37 +189,6 @@ pearl-ours: share accepted (total 12) ping=48ms
 pearl-ours:   gpu0:  175.2 TH  pwr 285W  acc=12 rej=0  ping   48ms  core 64C
 pearl-ours: 175.2 TH/s | acc=12 rej=0 ping=48ms
 ```
-
----
-
-## Tari C29
-
-A Windows x64 CUDA miner for Tari C29 / Cuckaroo29 pool mining.
-
-- **Components:** `tari_c29_pool_miner.exe`, `tari_c29_solver.exe`, and `start-c29.bat`.
-- **Pool default:** `taric29-ca.luckypool.io:3111`.
-- **Fee:** 2%, applied as a time slice.
-
-### Downloads
-
-| OS | Download |
-|----|----------|
-| Windows 10/11 x64 | [MeowMiner-c29-1.6.42-windows-x64.zip](../../releases/download/v1.6.42/MeowMiner-c29-1.6.42-windows-x64.zip) |
-
-### Windows
-
-Edit `start-c29.bat`, set your Tari wallet, then run the script.
-
-Direct run example:
-
-```bat
-tari_c29_pool_miner.exe --pool taric29-ca.luckypool.io:3111 --wallet YOUR_TARI_WALLET --worker rig1 --device 0
-```
-
-Pearl uses HeroMiners in the examples above. The C29 package uses the
-LuckyPool-compatible Tari C29 pool protocol implemented by the miner.
-
----
 
 ## Lucky Pepe (LPEPE) and YCash (YEC)
 
