@@ -8,13 +8,16 @@ binaries for Windows, Linux, and HiveOS.
 | Coin | Algorithm | Package | Latest |
 |------|-----------|---------|--------|
 | **Keryx (KRX)** | keryxhash | `MeowMiner-keryx` | v1.6.25 |
-| **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.41 |
+| **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.42 |
+| **Tari C29** | Cuckaroo29 | `MeowMiner-c29` | v1.6.42 |
 | **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
 | **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
 
 Keryx ships as its own CUDA package, wrapping Keryx miner 0.3.2 with
 MeowMiner launchers and HiveOS integration.
 Pearl ships as its own package (a CUDA engine plus a lightweight pool client).
+C29 ships as a Windows x64 CUDA package with a LuckyPool-compatible Tari C29
+pool miner.
 Lucky Pepe and YCash share a single unified launcher, selected with `--algo`.
 
 ---
@@ -95,11 +98,11 @@ workload finalized with BLAKE3. NVIDIA-only.
 | Windows 10/11 x64 | [MeowMiner-pearl-1.6.23-windows-x64.zip](../../releases/download/v1.6.23/MeowMiner-pearl-1.6.23-windows-x64.zip) |
 | Linux x86_64 | [MeowMiner-pearl-1.6.23-linux-x86_64.tar.gz](../../releases/download/v1.6.23/MeowMiner-pearl-1.6.23-linux-x86_64.tar.gz) |
 | HiveOS | [meowminer-pearl-1.6.23.tar.gz](../../releases/download/v1.6.23/meowminer-pearl-1.6.23.tar.gz) |
-| HiveOS sm86 package | [meowminer-sm86-lab-candidates-1.6.41.tar.gz](../../releases/download/v1.6.41/meowminer-sm86-lab-candidates-1.6.41.tar.gz) |
+| HiveOS sm86 package | [meowminer-sm86-lab-candidates-1.6.42.tar.gz](../../releases/download/v1.6.42/meowminer-sm86-lab-candidates-1.6.42.tar.gz) |
 | MMPOS | [meowminer-pearl-1.6.23-mmpos.tar.gz](../../releases/download/v1.6.23/meowminer-pearl-1.6.23-mmpos.tar.gz) |
 
-v1.6.41 corrects the HiveOS sm86 package after v1.6.40 underperformed on
-RTX 3060 Ti. It restores the known-good sm86 fixed-grid engine and removes the
+v1.6.42 carries forward the HiveOS sm86 package fix for RTX 30-series GPUs. It
+uses the known-good sm86 fixed-grid engine and removes the
 forced `2x1/N512` scheduler default, which measured slower than the no-L2-block
 fixed-grid path. The launcher prints the selected engine hash and sm86 scheduler
 flags per GPU; an RTX 3060 Ti default run should show `sm86_fixed_grid=38`,
@@ -152,7 +155,7 @@ For the RTX 30-series sm86 HiveOS package, use:
 
 | Field | Value |
 |-------|-------|
-| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.41/meowminer-sm86-lab-candidates-1.6.41.tar.gz` |
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.42/meowminer-sm86-lab-candidates-1.6.42.tar.gz` |
 | Miner name | `meowminer-sm86-lab-candidates` |
 
 ### MMPOS
@@ -187,6 +190,35 @@ pearl-ours: share accepted (total 12) ping=48ms
 pearl-ours:   gpu0:  175.2 TH  pwr 285W  acc=12 rej=0  ping   48ms  core 64C
 pearl-ours: 175.2 TH/s | acc=12 rej=0 ping=48ms
 ```
+
+---
+
+## Tari C29
+
+A Windows x64 CUDA miner for Tari C29 / Cuckaroo29 pool mining.
+
+- **Components:** `tari_c29_pool_miner.exe`, `tari_c29_solver.exe`, and `start-c29.bat`.
+- **Pool default:** `taric29-ca.luckypool.io:3111`.
+- **Fee:** 2%, applied as a time slice.
+
+### Downloads
+
+| OS | Download |
+|----|----------|
+| Windows 10/11 x64 | [MeowMiner-c29-1.6.42-windows-x64.zip](../../releases/download/v1.6.42/MeowMiner-c29-1.6.42-windows-x64.zip) |
+
+### Windows
+
+Edit `start-c29.bat`, set your Tari wallet, then run the script.
+
+Direct run example:
+
+```bat
+tari_c29_pool_miner.exe --pool taric29-ca.luckypool.io:3111 --wallet YOUR_TARI_WALLET --worker rig1 --device 0
+```
+
+Pearl uses HeroMiners in the examples above. The C29 package uses the
+LuckyPool-compatible Tari C29 pool protocol implemented by the miner.
 
 ---
 
