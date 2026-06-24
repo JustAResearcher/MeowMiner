@@ -8,7 +8,7 @@ binaries for Windows, Linux, and HiveOS.
 | Coin | Algorithm | Package | Latest |
 |------|-----------|---------|--------|
 | **Keryx (KRX)** | keryxhash | `MeowMiner-keryx` | v1.6.25 |
-| **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.42 |
+| **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.43 |
 | **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
 | **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
 
@@ -94,25 +94,23 @@ workload finalized with BLAKE3. NVIDIA-only.
 
 | OS | Download |
 |----|----------|
-| Windows 10/11 x64 | [MeowMiner-pearl-1.6.23-windows-x64.zip](../../releases/download/v1.6.23/MeowMiner-pearl-1.6.23-windows-x64.zip) |
-| Linux x86_64 | [MeowMiner-pearl-1.6.23-linux-x86_64.tar.gz](../../releases/download/v1.6.23/MeowMiner-pearl-1.6.23-linux-x86_64.tar.gz) |
-| HiveOS | [meowminer-pearl-1.6.23.tar.gz](../../releases/download/v1.6.23/meowminer-pearl-1.6.23.tar.gz) |
-| HiveOS sm86 package | [meowminer-sm86-lab-candidates-1.6.42.tar.gz](../../releases/download/v1.6.42/meowminer-sm86-lab-candidates-1.6.42.tar.gz) |
+| Windows 10/11 x64 | [MeowMiner-pearl-1.6.43-windows-x64.zip](../../releases/download/v1.6.43/MeowMiner-pearl-1.6.43-windows-x64.zip) |
+| Linux x86_64 | [MeowMiner-pearl-1.6.43-linux-x86_64.tar.gz](../../releases/download/v1.6.43/MeowMiner-pearl-1.6.43-linux-x86_64.tar.gz) |
+| HiveOS | [meowminer-pearl-1.6.43.tar.gz](../../releases/download/v1.6.43/meowminer-pearl-1.6.43.tar.gz) |
 | MMPOS | [meowminer-pearl-1.6.23-mmpos.tar.gz](../../releases/download/v1.6.23/meowminer-pearl-1.6.23-mmpos.tar.gz) |
 
-v1.6.42 carries forward the HiveOS sm86 package fix for RTX 30-series GPUs. It
-uses the known-good sm86 fixed-grid engine and removes the
-forced `2x1/N512` scheduler default, which measured slower than the no-L2-block
-fixed-grid path. The launcher prints the selected engine hash and sm86 scheduler
-flags per GPU; an RTX 3060 Ti default run should show `sm86_fixed_grid=38`,
-`l2block=n/axn/a`, and `bk64_stage=2`.
+v1.6.43 is the full parity Pearl package for Windows, Linux, and HiveOS. Each
+package includes the RTX 30-series sm86 engine, the RTX 40-series Ada engine,
+and the Blackwell/Hopper legacy engine. The launchers select by GPU compute
+capability per card: `8.6` uses `MeowMiner-pearl.sm86`, `8.9` uses
+`MeowMiner-pearl`, and `9.0` / `12.0` use `MeowMiner-pearl.legacy`.
 
-v1.6.23 keeps the v1.6.22 pool-ping wrapper and adds a Windows, Linux, HiveOS,
-and MMPOS engine split by GPU architecture. sm_86 GPUs route to a separate BK64
-StreamK candidate binary, RTX 40 / sm_89 uses the optimized Ada fixed-B + 32x3
-L2 path, and RTX 50 / sm_120 uses the tested Blackwell stream-sync engine. This
-is a software-only kernel/scheduler package update; it does not change clocks,
-fan settings, or power limits.
+The sm86 path uses the fixed-grid/no-forced-L2-block default measured faster on
+RTX 30-series. The launcher prints the selected engine and sm86 scheduler flags
+per GPU; an RTX 3060 Ti default run should show `sm86_fixed_grid=38`,
+`l2block=n/axn/a`, and `bk64_stage=2`. This is a software-only
+kernel/scheduler package update; it does not change clocks, fan settings, or
+power limits.
 
 ### Windows and Linux
 
@@ -141,21 +139,15 @@ Create a Custom miner flight sheet with the following fields:
 
 | Field | Value |
 |-------|-------|
-| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.23/meowminer-pearl-1.6.23.tar.gz` |
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.43/meowminer-pearl-1.6.43.tar.gz` |
 | Miner name | `meowminer-pearl` |
 | Hash algorithm | `pearlhash` |
 | Wallet and worker template | `%WAL%.%WORKER_NAME%` |
 | Pool URL | `us2.pearl.herominers.com:1200` |
 | Pass | `x` |
 
-Allow roughly 60 seconds after applying for the GPU engine to initialize.
-
-For the RTX 30-series sm86 HiveOS package, use:
-
-| Field | Value |
-|-------|-------|
-| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.42/meowminer-sm86-lab-candidates-1.6.42.tar.gz` |
-| Miner name | `meowminer-sm86-lab-candidates` |
+Allow roughly 60 seconds after applying for the GPU engine to initialize. A
+separate sm86-only HiveOS package is no longer needed for RTX 30-series cards.
 
 ### MMPOS
 
