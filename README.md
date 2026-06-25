@@ -202,8 +202,23 @@ MeowMiner-wrapped NeuroMorph miner used on the Mini rigs and AI hosts.
 
 | OS | Download |
 |----|----------|
+| Windows 10/11 x64 | [MeowMiner-cereblix-1.6.44-windows-x64.zip](../../releases/download/v1.6.44/MeowMiner-cereblix-1.6.44-windows-x64.zip) |
 | Linux x86_64 | [MeowMiner-cereblix-1.6.44-linux-x86_64.tar.gz](../../releases/download/v1.6.44/MeowMiner-cereblix-1.6.44-linux-x86_64.tar.gz) |
 | HiveOS | [meowminer-cereblix-1.6.44.tar.gz](../../releases/download/v1.6.44/meowminer-cereblix-1.6.44.tar.gz) |
+
+### Windows
+
+Extract the zip, then edit `start.bat` and set your Cereblix wallet, or run:
+
+```bat
+start.bat crb1youraddress rig1
+```
+
+Direct run example:
+
+```bat
+MeowMiner-cereblix.exe -o us.cereblix.com:3333 -u crb1youraddress.rig1 -p x -lanes 1 -noupdate
+```
 
 ### Linux
 
