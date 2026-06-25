@@ -9,7 +9,7 @@ ready-to-run binaries for Windows, Linux, and HiveOS.
 |------|-----------|---------|--------|
 | **Keryx (KRX)** | keryxhash | `MeowMiner-keryx` | v1.6.25 |
 | **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.43 |
-| **Cereblix (CRB)** | neuromorph | `MeowMiner-cereblix` | v1.6.45 |
+| **Cereblix (CRB)** | neuromorph | `MeowMiner-cereblix` | v1.6.46 |
 | **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
 | **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
 
@@ -204,9 +204,9 @@ MeowMiner-wrapped NeuroMorph miner used on the Mini rigs and AI hosts.
 
 | OS | Download |
 |----|----------|
-| Windows 10/11 x64 | [MeowMiner-cereblix-1.6.45-windows-x64.zip](../../releases/download/v1.6.45/MeowMiner-cereblix-1.6.45-windows-x64.zip) |
-| Linux x86_64 | [MeowMiner-cereblix-1.6.45-linux-x86_64.tar.gz](../../releases/download/v1.6.45/MeowMiner-cereblix-1.6.45-linux-x86_64.tar.gz) |
-| HiveOS | [meowminer-cereblix-1.6.45.tar.gz](../../releases/download/v1.6.45/meowminer-cereblix-1.6.45.tar.gz) |
+| Windows 10/11 x64 | [MeowMiner-cereblix-1.6.46-windows-x64.zip](../../releases/download/v1.6.46/MeowMiner-cereblix-1.6.46-windows-x64.zip) |
+| Linux x86_64 | [MeowMiner-cereblix-1.6.46-linux-x86_64.tar.gz](../../releases/download/v1.6.46/MeowMiner-cereblix-1.6.46-linux-x86_64.tar.gz) |
+| HiveOS | [meowminer-cereblix-1.6.46.tar.gz](../../releases/download/v1.6.46/meowminer-cereblix-1.6.46.tar.gz) |
 
 ### Windows
 
@@ -243,7 +243,7 @@ Create a Custom miner flight sheet with:
 
 | Field | Value |
 |-------|-------|
-| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.45/meowminer-cereblix-1.6.45.tar.gz` |
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.46/meowminer-cereblix-1.6.46.tar.gz` |
 | Miner name | `meowminer-cereblix` |
 | Hash algorithm | `neuromorph` |
 | Wallet and worker template | `%WAL%.%WORKER_NAME%` |
@@ -256,7 +256,7 @@ The package reports CPU hashrate in kH/s and keeps the GPU miner untouched.
 
 | CPU / rig | neuromorph |
 |-----------|------------|
-| Ryzen Mini rig | ~65-67 kH/s |
+| Ryzen Mini rig | ~78-83 kH/s |
 | AI02 dual EPYC 7742 | ~75-80 kH/s |
 
 ## Lucky Pepe (LPEPE) and YCash (YEC)
