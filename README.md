@@ -1,7 +1,7 @@
 # MeowMiner
 
-Pre-tuned, closed-source CUDA miners for NVIDIA GPUs, distributed as ready-to-run
-binaries for Windows, Linux, and HiveOS.
+Pre-tuned miners for NVIDIA GPUs and selected CPU algorithms, distributed as
+ready-to-run binaries for Windows, Linux, and HiveOS.
 
 ## Supported coins
 
@@ -9,12 +9,15 @@ binaries for Windows, Linux, and HiveOS.
 |------|-----------|---------|--------|
 | **Keryx (KRX)** | keryxhash | `MeowMiner-keryx` | v1.6.25 |
 | **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.43 |
+| **Cereblix (CRB)** | neuromorph | `MeowMiner-cereblix` | v1.6.44 |
 | **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
 | **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
 
 Keryx ships as its own CUDA package, wrapping Keryx miner 0.3.2 with
 MeowMiner launchers and HiveOS integration.
 Pearl ships as its own package (a CUDA engine plus a lightweight pool client).
+Cereblix ships as a CPU-only package with the optimized NeuroMorph miner,
+MeowMiner launchers, and HiveOS integration.
 Lucky Pepe and YCash share a single unified launcher, selected with `--algo`.
 
 ---
@@ -182,6 +185,63 @@ pearl-ours:   gpu0:  175.2 TH  pwr 285W  acc=12 rej=0  ping   48ms  core 64C
 pearl-ours: 175.2 TH/s | acc=12 rej=0 ping=48ms
 ```
 
+## Cereblix (CRB)
+
+An optimized CPU miner package for Cereblix `neuromorph`. This is the
+MeowMiner-wrapped NeuroMorph miner used on the Mini rigs and AI hosts.
+
+- **Architectures:** x86_64 CPUs with AES-NI and AVX2; VAES and AVX-512 are
+  selected automatically when available.
+- **Components:** `MeowMiner-cereblix`, the optimized `nmminer-cereblix` binary,
+  and bundled source/rebuild scripts.
+- **Pool default:** `us.cereblix.com:3333`.
+- **GPU:** not used by this package; run Pearl/Keryx GPU mining separately if
+  desired.
+
+### Downloads
+
+| OS | Download |
+|----|----------|
+| Linux x86_64 | [MeowMiner-cereblix-1.6.44-linux-x86_64.tar.gz](../../releases/download/v1.6.44/MeowMiner-cereblix-1.6.44-linux-x86_64.tar.gz) |
+| HiveOS | [meowminer-cereblix-1.6.44.tar.gz](../../releases/download/v1.6.44/meowminer-cereblix-1.6.44.tar.gz) |
+
+### Linux
+
+Edit `start.sh`, set your Cereblix wallet, then run the script. Worker names are
+appended by default, for example `crb1...rig1`.
+
+```bash
+WALLET=crb1youraddress WORKER=rig1 POOL=us.cereblix.com:3333 ./start.sh
+```
+
+Direct run example:
+
+```bash
+./MeowMiner-cereblix -a neuromorph -o us.cereblix.com:3333 -u crb1youraddress.rig1 -p x -noupdate
+```
+
+### HiveOS
+
+Create a Custom miner flight sheet with:
+
+| Field | Value |
+|-------|-------|
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.44/meowminer-cereblix-1.6.44.tar.gz` |
+| Miner name | `meowminer-cereblix` |
+| Hash algorithm | `neuromorph` |
+| Wallet and worker template | `%WAL%.%WORKER_NAME%` |
+| Pool URL | `us.cereblix.com:3333` |
+| Pass | `x` |
+
+The package reports CPU hashrate in kH/s and keeps the GPU miner untouched.
+
+### Reference performance
+
+| CPU / rig | neuromorph |
+|-----------|------------|
+| Ryzen Mini rig | ~65-67 kH/s |
+| AI02 dual EPYC 7742 | ~75-80 kH/s |
+
 ## Lucky Pepe (LPEPE) and YCash (YEC)
 
 A single unified launcher; select the coin with `--algo`.
@@ -248,11 +308,12 @@ passed after `--algo` overrides the corresponding default.
 
 ---
 
-## Supported GPUs
+## Supported Hardware
 
 | Algorithm | Architectures |
 |-----------|---------------|
 | Keryx (keryxhash) | CUDA GPUs; optimized `sm_89` path for RTX 40-series |
+| Cereblix (neuromorph) | x86_64 CPUs with AES-NI + AVX2; VAES / AVX-512 selected when present |
 | Pearl (pearlhash) | `sm_86` / `sm_89` / `sm_90` / `sm_120` (Ampere → Blackwell) |
 | LPEPE (yescryptR32) | `sm_60`+ (Pascal → Blackwell) |
 | YEC (Equihash 192,7) | `sm_75` / `sm_80` / `sm_86` / `sm_89` / `sm_120` (Turing → Blackwell) |
