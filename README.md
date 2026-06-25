@@ -9,7 +9,7 @@ ready-to-run binaries for Windows, Linux, and HiveOS.
 |------|-----------|---------|--------|
 | **Keryx (KRX)** | keryxhash | `MeowMiner-keryx` | v1.6.25 |
 | **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.43 |
-| **Cereblix (CRB)** | neuromorph | `MeowMiner-cereblix` | v1.6.47 |
+| **Cereblix (CRB)** | neuromorph | `MeowMiner-cereblix` | v1.6.48 |
 | **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
 | **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
 
@@ -204,9 +204,9 @@ MeowMiner-wrapped NeuroMorph miner used on the Mini rigs and AI hosts.
 
 | OS | Download |
 |----|----------|
-| Windows 10/11 x64 | [MeowMiner-cereblix-1.6.47-windows-x64.zip](../../releases/download/v1.6.47/MeowMiner-cereblix-1.6.47-windows-x64.zip) |
-| Linux x86_64 | [MeowMiner-cereblix-1.6.47-linux-x86_64.tar.gz](../../releases/download/v1.6.47/MeowMiner-cereblix-1.6.47-linux-x86_64.tar.gz) |
-| HiveOS | [meowminer-cereblix-1.6.47.tar.gz](../../releases/download/v1.6.47/meowminer-cereblix-1.6.47.tar.gz) |
+| Windows 10/11 x64 | [MeowMiner-cereblix-1.6.48-windows-x64.zip](../../releases/download/v1.6.48/MeowMiner-cereblix-1.6.48-windows-x64.zip) |
+| Linux x86_64 | [MeowMiner-cereblix-1.6.48-linux-x86_64.tar.gz](../../releases/download/v1.6.48/MeowMiner-cereblix-1.6.48-linux-x86_64.tar.gz) |
+| HiveOS | [meowminer-cereblix-1.6.48.tar.gz](../../releases/download/v1.6.48/meowminer-cereblix-1.6.48.tar.gz) |
 
 ### Windows
 
@@ -215,6 +215,9 @@ Extract the zip, then edit `start.bat` and set your Cereblix wallet, or run:
 ```bat
 start.bat crb1youraddress rig1
 ```
+
+The Windows release is built with a portable AES-NI baseline; AVX2, VAES, and
+AVX512 paths are selected at runtime only when the CPU supports them.
 
 To override Cereblix thread autotune, pass a thread count as the third argument:
 
@@ -252,7 +255,7 @@ Create a Custom miner flight sheet with:
 
 | Field | Value |
 |-------|-------|
-| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.47/meowminer-cereblix-1.6.47.tar.gz` |
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.48/meowminer-cereblix-1.6.48.tar.gz` |
 | Miner name | `meowminer-cereblix` |
 | Hash algorithm | `neuromorph` |
 | Wallet and worker template | `%WAL%.%WORKER_NAME%` |
