@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+usage() {
+  cat <<'EOF'
+MeowMiner multi-coin launcher
+
+Usage:
+  ./MeowMiner --coin btx   -u BTX_WALLET -o ninjaraider.com:44920 [options]
+  ./MeowMiner --coin pearl -u PRL_WALLET -o us2.pearl.herominers.com:1200 [options]
+
+Options:
+  --coin COIN          btx or pearl
+  -u, --user VALUE     payout wallet or pool login
+  -o, --pool VALUE     pool host:port, optionally with a stratum scheme
+  -w, --worker NAME    worker prefix/name (default: hostname)
+  -p, --password PASS  pool password (default: x)
+  --devices LIST       comma-separated NVIDIA GPU indexes
+  -h, --help           show this help
+
+The same values may be set with MEOW_COIN, MEOW_USER, MEOW_POOL,
+MEOW_WORKER, MEOW_PASSWORD, and MEOW_DEVICES.
+EOF
+}
+
+coin="${MEOW_COIN:-}"
+user="${MEOW_USER:-}"
+pool="${MEOW_POOL:-}"
+worker="${MEOW_WORKER:-$(hostname)}"
+password="${MEOW_PASSWORD:-x}"
+devices="${MEOW_DEVICES:-}"
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --coin) [ "$#" -ge 2 ] || { echo "--coin requires a value" >&2; exit 2; }; coin="$2"; shift 2 ;;
+    -u|--user|--wallet) [ "$#" -ge 2 ] || { echo "$1 requires a value" >&2; exit 2; }; user="$2"; shift 2 ;;
+    -o|--pool|--url) [ "$#" -ge 2 ] || { echo "$1 requires a value" >&2; exit 2; }; pool="$2"; shift 2 ;;
+    -w|--worker) [ "$#" -ge 2 ] || { echo "$1 requires a value" >&2; exit 2; }; worker="$2"; shift 2 ;;
+    -p|--password|--pass) [ "$#" -ge 2 ] || { echo "$1 requires a value" >&2; exit 2; }; password="$2"; shift 2 ;;
+    --devices) [ "$#" -ge 2 ] || { echo "--devices requires a value" >&2; exit 2; }; devices="$2"; shift 2 ;;
+    -h|--help) usage; exit 0 ;;
+    --) shift; break ;;
+    *) echo "Unknown option: $1" >&2; usage >&2; exit 2 ;;
+  esac
+done
+
+coin="$(printf '%s' "$coin" | tr '[:upper:]' '[:lower:]')"
+case "$coin" in
+  btx|pearl) ;;
+  *) echo "--coin must be btx or pearl" >&2; exit 2 ;;
+esac
+
+if [ -z "$user" ]; then
+  echo "A payout wallet/login is required (-u or MEOW_USER)." >&2
+  exit 2
+fi
+
+if [ -n "$devices" ]; then
+  case "$devices" in
+    *[!0-9,]*) echo "--devices must be a comma-separated list of GPU indexes" >&2; exit 2 ;;
+  esac
+fi
+
+strip_scheme() {
+  local value="$1"
+  value="${value#stratum+tcp://}"
+  value="${value#stratum+ssl://}"
+  value="${value#stratum+tls://}"
+  printf '%s' "$value"
+}
+
+if [ "$coin" = "btx" ]; then
+  [ -n "$pool" ] || pool="ninjaraider.com:44920"
+  case "$pool" in
+    stratum+tcp://*|stratum+ssl://*|stratum+tls://*) ;;
+    *) pool="stratum+tcp://$pool" ;;
+  esac
+  export BTX_MODE=pool
+  export BTX_WALLET="$user"
+  export BTX_POOL="$pool"
+  export BTX_WORKER_PREFIX="$worker"
+  export BTX_STRATUM_PASSWORD="$password"
+  [ -z "$devices" ] || export BTX_GPU_LIST="$devices"
+  exec "$ROOT/btx/run.sh"
+fi
+
+[ -n "$pool" ] || pool="us2.pearl.herominers.com:1200"
+authority="$(strip_scheme "$pool")"
+authority="${authority%%/*}"
+if [[ "$authority" != *:* ]]; then
+  authority="$authority:1200"
+fi
+host="${authority%:*}"
+port="${authority##*:}"
+case "$port" in
+  ''|*[!0-9]*) echo "Pearl pool must be host:port" >&2; exit 2 ;;
+esac
+
+export PEARL_WALLET="$user"
+export PEARL_WORKER="$worker"
+export PEARL_POOL_HOST="$host"
+export PEARL_POOL_PORT="$port"
+export PEARL_PASSWORD="$password"
+[ -z "$devices" ] || export PEARL_GPU_LIST="$devices"
+exec "$ROOT/pearl/start.sh"
