@@ -1,6 +1,6 @@
 param(
-    [string]$Version = "1.6.51",
-    [string]$BtxVersion = "0.33.0-opt35-v033ctx",
+    [string]$Version = "1.6.52",
+    [string]$BtxVersion = "0.33.0-opt36-luckypool-winfix",
     [string]$PearlVersion = "1.6.43"
 )
 
@@ -219,6 +219,22 @@ foreach ($script in $scripts) {
 [scriptblock]::Create((Get-Content -LiteralPath (Join-Path $windowsDir "MeowMiner.ps1") -Raw)) | Out-Null
 & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $windowsDir "MeowMiner.ps1") --help | Out-Null
 if ($LASTEXITCODE -ne 0) { throw "Windows launcher --help smoke test failed" }
+$btxWindowsRunOne = Join-Path $windowsDir "btx\run-one.ps1"
+$btxWindowsClient = Join-Path $windowsDir "btx\python\dexbtx_miner\stratum_client.py"
+[scriptblock]::Create((Get-Content -LiteralPath $btxWindowsRunOne -Raw)) | Out-Null
+$btxRunOneText = Get-Content -LiteralPath $btxWindowsRunOne -Raw
+$btxClientText = Get-Content -LiteralPath $btxWindowsClient -Raw
+foreach ($marker in @(
+    "BTX_5070_PROFILE",
+    "`$gpuName -match 'RTX\s+5070`$'",
+    "BTX_5070_BATCH_SIZE",
+    "BTX_5070_CUDA_POOL_SLOTS"
+)) {
+    if (!$btxRunOneText.Contains($marker)) { throw "Windows BTX RTX 5070 release gate failed: $marker" }
+}
+foreach ($marker in @("FIRST_JOB_TIMEOUT_SEC", "_luckypool_handshake", "authorized via LuckyPool login")) {
+    if (!$btxClientText.Contains($marker)) { throw "Windows BTX LuckyPool release gate failed: $marker" }
+}
 Invoke-Wsl "'$(To-WslPath (Join-Path $linuxDir 'MeowMiner'))' --help >/dev/null"
 
 $btxSourceLinuxSha = File-Sha256 (Join-Path $btxLinux.FullName "bin\btx-gbt-solve")
@@ -281,19 +297,23 @@ MeowMiner v{VERSION} combines the native BTX and Pearl NVIDIA miners behind one
 
 ## What changed
 
-- Updated BTX pool work for v0.33 template context, including `parentMtp` seed
-  handling and fail-closed validation when a post-upgrade job omits it.
-- Added a common multi-coin launcher for BTX and Pearl.
-- Added `--devices` GPU selection so separate instances can mine different
-  coins concurrently on disjoint GPUs.
-- Retained the Pearl v{PEARL_VERSION} architecture-specific engines for sm_86,
-  sm_89, sm_90, and sm_120.
+- LuckyPool regional endpoints now use their native `wallet.worker` / password
+  login directly instead of probing unsupported Stratum methods first.
+- Added a 30-second first-job watchdog so an authorized but idle LuckyPool
+  session reconnects instead of hanging forever.
+- Added a Windows RTX 5070 (12 GB) compatibility profile: threads 8,
+  prepare-workers 8, batch 128, and four CUDA pool slots. v1.6.51 incorrectly
+  left this non-Ti card on the generic batch-512 / eight-slot profile.
+- Retained BTX v0.33 `parentMtp` validation and the Pearl v{PEARL_VERSION}
+  architecture-specific engines for sm_86, sm_89, sm_90, and sm_120.
 - BTX uses the pool-validated {BTX_VERSION} CUDA solver. BTX has no dev fee;
   Pearl retains its 2% dev fee.
 
 ## Validation
 
-- BTX accepted shares: NinjaRaider, RTX 5070 Ti, zero rejects during canary.
+- Patched Windows BTX package: LuckyPool US-East accepted share, 1 accepted / 0 rejected.
+- LuckyPool direct-login, initial-job watchdog, and host-detection regression tests passed.
+- RTX 5070 model fixture selected batch 128 and four CUDA pool slots.
 - Pearl accepted shares: HeroMiners, RTX 5070 Ti, zero invalid shares during canary.
 - Windows PowerShell launcher parse/help smoke test passed.
 - Linux and HiveOS shell syntax checks passed.
