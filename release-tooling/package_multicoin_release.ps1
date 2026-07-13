@@ -1,6 +1,6 @@
 param(
-    [string]$Version = "1.6.52",
-    [string]$BtxVersion = "0.33.0-opt36-luckypool-winfix",
+    [string]$Version = "1.6.53",
+    [string]$BtxVersion = "0.33.0-opt37-luckypool-prehashfix",
     [string]$PearlVersion = "1.6.43"
 )
 
@@ -159,14 +159,14 @@ MeowMiner $Version - BTX + Pearl multi-coin release
 
 This package contains two native NVIDIA mining engines selected by --coin:
 
-  BTX    matmul, corrected v0.33 parent-template context, no dev fee
+  BTX    matmul, exact-header pre-hash validation, no dev fee
   Pearl  pearlhash, Ampere/Ada/Hopper/Blackwell engines, 2% dev fee
 
 Quick start
 -----------
 
 BTX:
-  ./MeowMiner --coin btx -u btx1zYOUR_ADDRESS -o ninjaraider.com:44920
+  ./MeowMiner --coin btx -u btx1zYOUR_ADDRESS -o btx-us-east.lproute.com:8660
 
 Pearl:
   ./MeowMiner --coin pearl -u prl1YOUR_ADDRESS -o us2.pearl.herominers.com:1200
@@ -182,8 +182,9 @@ The miner selects one coin per GPU. Run separate instances with disjoint
 --devices lists to mine BTX and Pearl at the same time on one multi-GPU host.
 Do not assign the same GPU to both instances.
 
-BTX defaults to NinjaRaider. Pearl defaults to HeroMiners US2. Override -o to
-use another compatible pool. Pool-side accepted shares are the validity test.
+BTX defaults to LuckyPool US-East. Pearl defaults to HeroMiners US2. Override
+-o to use another compatible pool. Pool-side accepted shares are the validity
+test.
 "@
 Write-Utf8NoBom (Join-Path $linuxDir "README.txt") $readme
 Write-Utf8NoBom (Join-Path $windowsDir "README.txt") $readme
@@ -228,11 +229,18 @@ foreach ($marker in @(
     "BTX_5070_PROFILE",
     "`$gpuName -match 'RTX\s+5070`$'",
     "BTX_5070_BATCH_SIZE",
-    "BTX_5070_CUDA_POOL_SLOTS"
+    "BTX_5070_CUDA_POOL_SLOTS",
+    "BTX_MATMUL_GPU_SCAN_CPU_RECHECK"
 )) {
     if (!$btxRunOneText.Contains($marker)) { throw "Windows BTX RTX 5070 release gate failed: $marker" }
 }
-foreach ($marker in @("FIRST_JOB_TIMEOUT_SEC", "_luckypool_handshake", "authorized via LuckyPool login")) {
+foreach ($marker in @(
+    "FIRST_JOB_TIMEOUT_SEC",
+    "_luckypool_handshake",
+    "authorized via LuckyPool login",
+    "def _native_pool_name",
+    "pool_name.lower()"
+)) {
     if (!$btxClientText.Contains($marker)) { throw "Windows BTX LuckyPool release gate failed: $marker" }
 }
 Invoke-Wsl "'$(To-WslPath (Join-Path $linuxDir 'MeowMiner'))' --help >/dev/null"
@@ -297,13 +305,15 @@ MeowMiner v{VERSION} combines the native BTX and Pearl NVIDIA miners behind one
 
 ## What changed
 
-- LuckyPool regional endpoints now use their native `wallet.worker` / password
-  login directly instead of probing unsupported Stratum methods first.
-- Added a 30-second first-job watchdog so an authorized but idle LuckyPool
-  session reconnects instead of hanging forever.
-- Added a Windows RTX 5070 (12 GB) compatibility profile: threads 8,
-  prepare-workers 8, batch 128, and four CUDA pool slots. v1.6.51 incorrectly
-  left this non-Ti card on the generic batch-512 / eight-slot profile.
+- BTX candidates now receive a final consensus pre-hash check against the exact
+  submitted header after meeting the pool share target and before emission.
+  This prevents LuckyPool code 23 (`BTX pre-hash gate failed`) rejects even if
+  the earlier CUDA scan-stage CPU recheck is explicitly disabled.
+- CUDA scan CPU recheck now defaults on as an earlier safety filter.
+- LuckyPool sessions now say `LuckyPool` / `luckypool job` in user-facing logs;
+  the shared native protocol identifier remains internal.
+- BTX now defaults to LuckyPool US-East at
+  `btx-us-east.lproute.com:8660` on every packaged platform.
 - Retained BTX v0.33 `parentMtp` validation and the Pearl v{PEARL_VERSION}
   architecture-specific engines for sm_86, sm_89, sm_90, and sm_120.
 - BTX uses the pool-validated {BTX_VERSION} CUDA solver. BTX has no dev fee;
@@ -311,8 +321,16 @@ MeowMiner v{VERSION} combines the native BTX and Pearl NVIDIA miners behind one
 
 ## Validation
 
-- Patched Windows BTX package: LuckyPool US-East accepted share, 1 accepted / 0 rejected.
-- LuckyPool direct-login, initial-job watchdog, and host-detection regression tests passed.
+- Released Windows solver control: 2 accepted / 12 code-23 rejects in 219s.
+- Patched Windows solver: 8 accepted / 0 rejects across three independent
+  LuckyPool canaries totaling about 268s, including a clean parent change.
+- Final extracted v{VERSION} Windows archive: 3 accepted / 0 rejected in a
+  140-second LuckyPool canary; it crossed a clean parent change and discarded
+  the stale old-job result.
+- The decisive canary ran with scan-stage CPU recheck disabled, isolating the
+  final exact-header guard as the effective fix.
+- Logs showed `LuckyPool` and `luckypool job`; no `ninjaraider` label appeared.
+- Targeted wrapper tests passed: 51 passed, 2 skipped.
 - RTX 5070 model fixture selected batch 128 and four CUDA pool slots.
 - Pearl accepted shares: HeroMiners, RTX 5070 Ti, zero invalid shares during canary.
 - Windows PowerShell launcher parse/help smoke test passed.

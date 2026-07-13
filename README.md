@@ -10,7 +10,7 @@ ready-to-run binaries for Windows, Linux, and HiveOS.
 | **Keryx (KRX)** | keryxhash | `MeowMiner-keryx` | v1.6.25 |
 | **Pearl (PRL)** | pearlhash (int8 tensor-core + BLAKE3) | `MeowMiner-pearl` | v1.6.43 |
 | **Cereblix (CRB)** | neuromorph | `MeowMiner-cereblix` | v1.6.48 |
-| **BTX (BTX)** | matmul | `MeowMiner` multi-coin | v1.6.52 |
+| **BTX (BTX)** | matmul | `MeowMiner` multi-coin | v1.6.53 |
 | **Lucky Pepe (LPEPE)** | yescryptR32 | `MeowMiner` | v1.3.2 |
 | **YCash (YEC)** | Equihash 192,7 | `MeowMiner` | v1.3.2 |
 
@@ -19,7 +19,7 @@ MeowMiner launchers and HiveOS integration.
 Pearl ships as its own package (a CUDA engine plus a lightweight pool client).
 Cereblix ships as a CPU-only package with the optimized NeuroMorph miner,
 MeowMiner launchers, and HiveOS integration.
-BTX and Pearl also ship together in the v1.6.52 multi-coin package, selected
+BTX and Pearl also ship together in the v1.6.53 multi-coin package, selected
 with `--coin btx` or `--coin pearl` and supporting disjoint GPU assignment.
 Lucky Pepe and YCash share a single unified launcher, selected with `--algo`.
 
@@ -27,12 +27,12 @@ Lucky Pepe and YCash share a single unified launcher, selected with `--algo`.
 
 ## BTX + Pearl multi-coin
 
-MeowMiner v1.6.52 combines the native BTX `matmul` miner and Pearl `pearlhash`
-miner behind one launcher. BTX uses corrected v0.33 parent-template context;
-Pearl retains its architecture-specific Ampere, Ada, Hopper, and Blackwell
-engines.
+MeowMiner v1.6.53 combines the native BTX `matmul` miner and Pearl `pearlhash`
+miner behind one launcher. BTX validates the exact candidate header against
+the consensus pre-hash gate before submission; Pearl retains its
+architecture-specific Ampere, Ada, Hopper, and Blackwell engines.
 
-- **BTX:** NinjaRaider and LuckyPool mining, no dev fee.
+- **BTX:** LuckyPool by default, with NinjaRaider also supported; no dev fee.
 - **Windows RTX 5070:** automatic 12 GB compatibility profile.
 - **Pearl:** HeroMiners by default, 2% dev fee.
 - **GPU assignment:** use `--devices 0,1`. Separate instances can mine BTX and
@@ -42,9 +42,9 @@ engines.
 
 | OS | Download |
 |----|----------|
-| Windows 10/11 x64 | [MeowMiner-1.6.52-windows-x64.zip](../../releases/download/v1.6.52/MeowMiner-1.6.52-windows-x64.zip) |
-| Linux x86_64 | [MeowMiner-1.6.52-linux-x86_64.tar.gz](../../releases/download/v1.6.52/MeowMiner-1.6.52-linux-x86_64.tar.gz) |
-| HiveOS | [meowminer-1.6.52.tar.gz](../../releases/download/v1.6.52/meowminer-1.6.52.tar.gz) |
+| Windows 10/11 x64 | [MeowMiner-1.6.53-windows-x64.zip](../../releases/download/v1.6.53/MeowMiner-1.6.53-windows-x64.zip) |
+| Linux x86_64 | [MeowMiner-1.6.53-linux-x86_64.tar.gz](../../releases/download/v1.6.53/MeowMiner-1.6.53-linux-x86_64.tar.gz) |
+| HiveOS | [meowminer-1.6.53.tar.gz](../../releases/download/v1.6.53/meowminer-1.6.53.tar.gz) |
 
 ### Windows and Linux
 
@@ -52,8 +52,8 @@ Extract the archive and use `MeowMiner.ps1` on Windows or `./MeowMiner` on
 Linux. Examples:
 
 ```bash
-./MeowMiner --coin btx -u btx1zYOUR_ADDRESS -o ninjaraider.com:44920
 ./MeowMiner --coin btx -u btx1zYOUR_ADDRESS -o btx-us-east.lproute.com:8660
+./MeowMiner --coin btx -u btx1zYOUR_ADDRESS -o ninjaraider.com:44920
 ./MeowMiner --coin pearl -u prl1YOUR_ADDRESS -o us2.pearl.herominers.com:1200
 ./MeowMiner --coin btx -u btx1zYOUR_ADDRESS --devices 0,2
 ```
@@ -64,11 +64,11 @@ Create a Custom miner flight sheet with:
 
 | Field | Value |
 |-------|-------|
-| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.52/meowminer-1.6.52.tar.gz` |
+| Installation URL | `https://github.com/JustAResearcher/MeowMiner/releases/download/v1.6.53/meowminer-1.6.53.tar.gz` |
 | Miner name | `meowminer` |
 | Hash algorithm | `btx` or `pearl` |
 | Wallet and worker template | the matching `btx1z...` or `prl1...` address |
-| Pool URL | `ninjaraider.com:44920` or `us2.pearl.herominers.com:1200` |
+| Pool URL | `btx-us-east.lproute.com:8660` or `us2.pearl.herominers.com:1200` |
 | Pass | `x` |
 
 Set `MEOW_COIN=btx` or `MEOW_COIN=pearl` in Extra config if the flight-sheet

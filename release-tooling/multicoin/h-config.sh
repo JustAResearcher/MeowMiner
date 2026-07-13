@@ -19,7 +19,7 @@ esac
 
 pool="${CUSTOM_URL:-}"
 if [ -z "$pool" ]; then
-  if [ "$coin" = btx ]; then pool="ninjaraider.com:44920"; else pool="us2.pearl.herominers.com:1200"; fi
+  if [ "$coin" = btx ]; then pool="btx-us-east.lproute.com:8660"; else pool="us2.pearl.herominers.com:1200"; fi
 fi
 
 {

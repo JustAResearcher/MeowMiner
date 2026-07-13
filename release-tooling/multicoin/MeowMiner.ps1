@@ -5,7 +5,7 @@ function Show-Usage {
 MeowMiner multi-coin launcher
 
 Usage:
-  .\MeowMiner.ps1 --coin btx   -u BTX_WALLET -o ninjaraider.com:44920
+  .\MeowMiner.ps1 --coin btx   -u BTX_WALLET -o btx-us-east.lproute.com:8660
   .\MeowMiner.ps1 --coin pearl -u PRL_WALLET -o us2.pearl.herominers.com:1200
 
 Options:
@@ -59,7 +59,7 @@ if ($devices -and $devices -notmatch '^\d+(,\d+)*$') {
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 if ($coin -eq "btx") {
-    if (!$pool) { $pool = "ninjaraider.com:44920" }
+    if (!$pool) { $pool = "btx-us-east.lproute.com:8660" }
     if ($pool -notmatch '^[a-z][a-z0-9+.-]*://') { $pool = "stratum+tcp://$pool" }
     $env:BTX_MODE = "pool"
     $env:BTX_WALLET = $user
